@@ -26,8 +26,6 @@ setup(
 		'sklearn',
         'matplotlib',
         'scipy',
-        'metanetwork',
-        'nnrf',
     ],
 	python_requires='>=3.4, <4',
 	classifiers=[
