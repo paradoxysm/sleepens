@@ -1,8 +1,8 @@
 import numpy as np
 
 from sklearn.mixture import GaussianMixture as GMM
-from sleep.utils.selection import GridSearchCV
-from sleep.utils.misc import separate_by_label
+from sleepens.utils.selection import GridSearchCV
+from sleepens.utils.misc import separate_by_label
 
 def generative_oversample(data, labels, desired=None, balance='auto',
 							seed=None, verbose=True):

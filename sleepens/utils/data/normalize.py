@@ -5,7 +5,7 @@
 
 import numpy as np
 
-from sleep.utils.data.transform import log_transform
+from sleepens.utils.data.transform import log_transform
 
 def normalize(data, mu=0, sigma=1, axis=0):
 	"""
