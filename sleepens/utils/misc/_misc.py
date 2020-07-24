@@ -94,6 +94,28 @@ def determine_threshold(data, threshold, axis=0):
 	else : raise ValueError("Threshold must be 'mean','median','%<k>',float/int")
 	return threshold
 
+def separate_by_label(data, labels):
+	"""
+	Create a dictionary grouping data by labels
+	in order.
+
+	Parameters
+	----------
+	data : array-like, shape=(n_samples, n_features)
+		Data.
+
+	labels : array-like, shape=(n_samples,)
+		Labels for the given `data`.
+
+	Returns
+	-------
+	separated : dict
+		Dictionary of categorized data.
+	"""
+	separated = {k: [] for k in labels}
+	for d, l in zip(data, labels):
+		separated[l].append(d)
+	return separated
 
 def one_hot(Y, cols=None):
 	"""

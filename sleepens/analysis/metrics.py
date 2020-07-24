@@ -2,7 +2,7 @@ from abc import ABC, abstractmethod
 from sklearn import metrics
 import numpy as np
 
-from sleepens.utils import check_XY
+from sleepens.utils.misc import check_XY
 from sleepens.utils._base import Base
 
 def get_metrics(name):
