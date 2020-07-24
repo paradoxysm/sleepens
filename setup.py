@@ -26,6 +26,8 @@ setup(
 		'sklearn',
         'matplotlib',
         'scipy',
+        'xlrd',
+        'xlwt',
     ],
 	python_requires='>=3.4, <4',
 	classifiers=[
