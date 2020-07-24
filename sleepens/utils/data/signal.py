@@ -6,7 +6,7 @@
 import numpy as np
 from scipy import signal
 
-from sleep.utils.data.normalize import prob_normalize
+from sleepens.utils.data.normalize import prob_normalize
 
 def compute_bands(f, Pxx, bands, compute='sum'):
 	"""
