@@ -1,7 +1,7 @@
 import numpy as np
 from abc import ABC, abstractmethod
 
-from sleepens.utils._base import Base
+from sleepens.metanetwork.utils._base import Base
 
 def get_activation(name):
 	"""
@@ -276,7 +276,8 @@ class Softmax(Activation):
 
 	def activation(self, X, axis=1):
 		exp = np.exp(X)
-		return exp / np.sum(exp, axis=axis).reshape(-1,1)
+		exp_sum = np.maximum(1e-8, np.sum(exp, axis=axis)).reshape(-1,1)
+		return exp / exp_sum
 
 	def gradient(self, X, axis=1):
 		s = self.activation(X, axis=axis)

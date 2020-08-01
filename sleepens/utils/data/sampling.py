@@ -34,8 +34,7 @@ def balance(data, labels, desired=None, balance='auto',
 					or risk not oversampling a minority label.
 		 - int : Oversample `desired` labels so that total
 		 			such samples reach this value.
-		 - dict : Oversample each label up to the values in
-		 			the dictionary.
+		 - dict : Oversample each label by the value given.
 
 	seed : None or int or RandomState, default=None
 		Initial seed for the RandomState. If seed is None,
@@ -86,7 +85,7 @@ def balance(data, labels, desired=None, balance='auto',
 	else:
 		raise ValueError("Balance must be {'auto', int, dict}")
 	if verbose > 0 : print("Oversampling")
-	return _generative_oversample(separated, n_samples, seed=seed)
+	return _generative_oversample(separated, n_samples, seed=seed, verbose=verbose)
 
 def multiply(data, labels, factor=1, seed=None, verbose=0):
 	"""
@@ -104,7 +103,7 @@ def multiply(data, labels, factor=1, seed=None, verbose=0):
 	labels : array-like, shape=(n_samples,)
 		Labels corresponding to data.
 
-	factor : int, default=1
+	factor : float, default=1
 		Factor to oversample the dataset by.
 
 	seed : None or int or RandomState, default=None
@@ -125,15 +124,16 @@ def multiply(data, labels, factor=1, seed=None, verbose=0):
 	labels : ndarray
 		All corresponding labels.
 	"""
+	if factor <= 0 : raise ValueError("Factor must be positive")
 	if len(data) == 0:
 		if verbose > 0 : print("No data to oversample")
 		return data, labels
 	if verbose > 0 : print("Generative Oversampling")
 	separated = separate_by_label(data, labels)
-	n_samples = {k: len(separated[k]) for k in separated.keys()}
-	return _generative_oversample(separated, n_samples, seed=seed)
+	n_samples = {k: int(factor * len(separated[k])) for k in separated.keys()}
+	return _generative_oversample(separated, n_samples, seed=seed, verbose=verbose)
 
-def _generative_oversample(data_labels, n_samples, seed=None):
+def _generative_oversample(data_labels, n_samples, seed=None, verbose=0):
 	"""
 	Generatively oversample the data.
 
@@ -152,6 +152,10 @@ def _generative_oversample(data_labels, n_samples, seed=None):
 		return a RandomState with the seed set to the int.
 		If seed is a RandomState, return that RandomState.
 
+	verbose : int, default=0
+		Verbosity; higher values result in
+		more verbose output.
+
 	Returns
 	-------
 	data : ndarray
@@ -161,13 +165,14 @@ def _generative_oversample(data_labels, n_samples, seed=None):
 		All corresponding labels.
 	"""
 	oversampled = {}
-	for label in separated:
-		if verbose : print("\tModelling distribution for", str(label))
-		model = _fit_cluster(separated[label], seed=seed)
-		if verbose : print("\tSampling data for", str(label))
+	for label in data_labels:
+		if n_samples[label] == 0 : continue
+		if verbose > 0 : print("\tModelling distribution for", str(label))
+		model = _fit_cluster(data_labels[label], seed=seed)
+		if verbose > 0 : print("\tSampling data for", str(label))
 		model.weights_ = (model.weights_ / np.sum(model.weights_)).astype(np.float64)
 		oversampled[label] = model.sample(n_samples[label])[0]
-	if verbose : print("Collating and shuffling")
+	if verbose > 0 : print("Collating and shuffling")
 	new_set = []
 	for k in oversampled.keys():
 		length = len(oversampled[k])

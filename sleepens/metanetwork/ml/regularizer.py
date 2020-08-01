@@ -1,7 +1,7 @@
 import numpy as np
 from abc import ABC, abstractmethod
 
-from sleepens.utils._base import Base
+from sleepens.metanetwork.utils._base import Base
 
 def get_regularizer(name):
 	"""

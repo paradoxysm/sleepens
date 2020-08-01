@@ -7,6 +7,26 @@ import numpy as np
 
 from sleepens.utils.data.transform import log_transform
 
+def demean(data, axis=0):
+	"""
+	Demean the data by subtracting the mean from
+	all samples.
+
+	Parameters
+	----------
+	data : ndarray
+		Data to be normalized.
+
+	axis : int, default=0
+		Axis to demean along.
+
+	Returns
+	-------
+	demeaned : ndarray
+		Demeaned data.
+	"""
+	return data - np.mean(data, axis=axis)
+
 def normalize(data, mu=0, sigma=1, axis=0):
 	"""
 	Normalize `data` such that the mean is

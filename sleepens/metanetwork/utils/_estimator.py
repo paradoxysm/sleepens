@@ -3,13 +3,12 @@ from abc import ABC, abstractmethod
 from copy import copy
 from tqdm import trange
 
-from sleepens.ml import get_optimizer, get_loss
-from sleepens.utils.misc import check_XY, one_hot, decode
-from sleepens.utils.misc import calculate_batch, calculate_weight
-from sleepens.io import BatchDataset
-from sleepens.analysis import get_metrics
-
-from sleepens.utils._base import Base
+from sleepens.metanetwork.ml import get_optimizer, get_loss
+from sleepens.metanetwork.utils import check_XY, one_hot, decode
+from sleepens.metanetwork.utils import calculate_batch, calculate_weight
+from sleepens.metanetwork.utils import BatchDataset
+from sleepens.metanetwork.analysis import get_metrics
+from sleepens.metanetwork.utils._base import Base
 
 
 class BaseEstimator(Base, ABC):
@@ -332,6 +331,7 @@ class Classifier(BaseEstimator, ABC):
 			batches = range(ds.n_batches)
 			if self.verbose == 2 : batches = trange(ds.n_batches)
 			elif self.verbose > 2 : print("Epoch %d" % e)
+			loss, metric = [], []
 			for b in batches:
 				X_batch, Y_batch, weights = ds.next()
 				if len(X_batch) == 0:
@@ -339,19 +339,19 @@ class Classifier(BaseEstimator, ABC):
 					early_stop = True
 					break
 				Y_hat = self.forward(X_batch)
-				loss = np.mean(np.sum(self.loss.loss(Y_hat, Y_batch), axis=1))
-				metric = self.score(Y_batch, Y_hat=Y_hat, weights=weights)
-				msg = 'loss: %.4f' % loss + ', ' + self.metric.name + ': %.4f' % metric
-				if self.verbose == 1 : epochs.set_description(msg)
-				elif self.verbose == 2 : batches.set_description(msg)
+				loss.append(np.mean(np.sum(self.loss.loss(Y_hat, Y_batch), axis=1)))
+				metric.append(self.score(Y_batch, Y_hat=Y_hat, weights=weights))
+				msg = 'loss: %.4f' % loss[-1] + ', ' + self.metric.name + ': %.4f' % metric[-1]
+				if self.verbose == 2 : batches.set_description(msg)
 				elif self.verbose > 2 : print("Epoch %d, Batch %d completed." % (e+1, b+1), msg)
-				if self.tol is not None and np.abs(loss - loss_prev) < self.tol:
-					early_stop = True
-					break
 				dY = self.loss.gradient(Y_hat, Y_batch) * weights.reshape(-1,1)
 				self.backward(dY)
-				loss_prev = loss
-			if early_stop : break
+			loss_mean, metric_mean = np.mean(loss), np.mean(metric)
+			msg = 'loss: %.4f' % loss_mean + ', ' + self.metric.name + ': %.4f' % metric_mean
+			if self.verbose == 1 : epochs.set_description(msg)
+			if self.tol is not None and np.abs(loss_mean - loss_prev) < self.tol:
+				break
+			loss_prev = loss_mean
 		self.fitted_ = True
 		if self.verbose > 0 : print("Training complete.")
 		return self
