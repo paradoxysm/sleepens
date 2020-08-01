@@ -1,6 +1,6 @@
 import numpy as np
 
-from sleepens.utils.misc import create_random_state
+from sleepens.metanetwork.utils import create_random_state
 
 class BatchDataset:
 	"""

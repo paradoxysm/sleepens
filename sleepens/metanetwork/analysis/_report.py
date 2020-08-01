@@ -1,6 +1,6 @@
 import numpy as np
 
-from sleepens.analysis import multiconfusion_matrix
+from sleepens.metanetwork.analysis import multiconfusion_matrix
 
 def calculate_statistics(Y_hat, Y, beta=1, average=None):
 		"""
