@@ -14,7 +14,7 @@ Once you have a suitable python environment setup, `sleepens` can be easily inst
 ```
 pip install sleepens
 ```
-> `sleepens` is tested and supported on Python 3.4 up to Python 3.7. Usage on other versions of Python is not guaranteed to work as intended.
+> `sleepens` is tested and supported on Python 3.5 up to Python 3.8. Usage on other versions of Python is not guaranteed to work as intended.
 
 Then download the latest application package from [releases](https://github.com/paradoxysm/sleepens/releases) and run via `python sleepens.py`. The package contains the latest Sleep Ensemble models to use.
 
