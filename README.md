@@ -27,7 +27,7 @@ Alongside the Sleep Ensemble application, the framework is designed for high mod
 ```python
 # Import the base shell sleep ensemble and load a pre-trained model in a .joblib file
 from sleepens import SleepEnsemble
-model = SleepEnsemble.load("/path/to/model.joblib")
+model = SleepEnsemble().load("/path/to/model.joblib")
 
 # Classify your data
 predictions = model.predict(data)
