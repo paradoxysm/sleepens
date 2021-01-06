@@ -82,7 +82,23 @@ def ask_directory(title="Choose Folder"):
 	root.destroy()
 	return folder
 
-def print_classification_report(Y_hat, Y):
+def print_report(Y_hat, Y):
+	print("Confusion Matrix")
+	print("-"*30)
+	matrix, targets, labels = confusion_matrix(Y_hat, Y)
+	row_format = "{:>10}" * (len(labels) + 2)
+	title = ["" for i in range(len(labels)+2)]
+	title[len(labels)//2 + 2] = "PREDICTION"
+	print(row_format.format(*title))
+	print(row_format.format("", "", *labels))
+	for row in range(len(matrix)):
+		if row == len(matrix)//2 : blank = "TARGET"
+		else : blank = ""
+		row_data = ["%.f" % cell for cell in matrix[row]]
+		print(row_format.format(blank, "%.f" % targets[row], *row_data))
+	print("-"*30)
+	print("Classification Report")
+	print("-"*30)
 	report = classification_report(Y_hat, Y)
 	beta = report.pop('beta')
 	support = report.pop('support')
@@ -90,8 +106,6 @@ def print_classification_report(Y_hat, Y):
 	macro = report.pop('macro avg')
 	weighted = report.pop('weighted avg')
 	header = ["Precision", "Recall", "F1-Score", "Support"]
-	print("Classification Report")
-	print("-"*30)
 	row_format = "{:>15}" * (len(header) + 1)
 	print(row_format.format("", *header))
 	for k, v in sorted(report.items()):
@@ -261,7 +275,7 @@ def validate():
 	print("Overall Score:", score)
 	p_overall = np.concatenate(p)
 	labels_overall = np.concatenate(labels)
-	classification_report(p_overall.reshape(-1), labels_overall.reshape(-1)))
+	print_report(p_overall.reshape(-1), labels_overall.reshape(-1)))
 	if save_input:
 		if verbose > 1 : print("Writing results")
 		for i in range(len(p)):
