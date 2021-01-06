@@ -6,10 +6,10 @@ def confusion_matrix(Y_hat, Y, norm=None):
 
 		Parameters
 		----------
-		Y_hat : array-like
+		Y_hat : array-like, shape=(n_samples,)
 			List of data labels.
 
-		Y : array-like
+		Y : array-like, shape=(n_samples,)
 			List of target truth labels.
 
 		norm : {'label', 'target', 'all', None}, default=None
@@ -24,6 +24,12 @@ def confusion_matrix(Y_hat, Y, norm=None):
 		matrix : ndarray, shape=(target_classes, label_classes)
 			Confusion matrix with target classes as rows and
 			label classes as columns. Classes are in sorted order.
+
+		target_classes : list, shape=(target_classes,)
+			List of the target classes (rows).
+
+		label_classes : list, shape=(label_classes,)
+			List of the label classes (rows).
 		"""
 		target_classes = sorted(set(Y))
 		label_classes = sorted(set(Y_hat))
@@ -40,7 +46,7 @@ def confusion_matrix(Y_hat, Y, norm=None):
 			matrix /= np.max(matrix)
 		elif norm is not None:
 			raise ValueError("Norm must be one of {'label', 'target', 'all', None}")
-		return matrix.astype(int)
+		return matrix.astype(int), target_classes, label_classes
 
 def multiconfusion_matrix(Y_hat, Y):
 	"""
@@ -48,10 +54,10 @@ def multiconfusion_matrix(Y_hat, Y):
 
 	Parameters
 	----------
-	Y_hat : array-like
+	Y_hat : array-like, shape=(n_samples,)
 		List of data labels.
 
-	Y : array-like
+	Y : array-like, shape=(n_samples,)
 		List of target truth labels.
 
 	Returns

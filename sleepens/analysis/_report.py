@@ -9,10 +9,10 @@ def calculate_statistics(Y_hat, Y, beta=1, average=None):
 
 		Parameters
 		----------
-		Y_hat : array-like
+		Y_hat : array-like, shape=(n_samples,)
 			List of data labels.
 
-		Y : array-like
+		Y : array-like, shape=(n_samples,)
 			List of target truth labels.
 
 		beta : float, default=1
@@ -96,10 +96,10 @@ def classification_report(Y_hat, Y, beta=1):
 
 	Parameters
 	----------
-	Y_hat : array-like
+	Y_hat : array-like, shape=(n_samples,)
 		List of data labels.
 
-	Y : array-like
+	Y : array-like, shape=(n_samples,)
 		List of target truth labels.
 
 	beta : float, default=1
