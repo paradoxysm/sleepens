@@ -1,7 +1,7 @@
 ## Sleep Ensemble
 
-[![Travis](https://flat.badgen.net/travis/paradoxysm/sleepens?label=build)](https://travis-ci.com/paradoxysm/sleepens)
-[![Codecov](https://flat.badgen.net/codecov/c/github/paradoxysm/sleepens?label=coverage)](https://codecov.io/gh/paradoxysm/sleepens)
+[![Travis](https://flat.badgen.net/travis/paradoxysm/sleepens?label=build&kill_cache=1)](https://travis-ci.com/paradoxysm/sleepens)
+[![Codecov](https://flat.badgen.net/codecov/c/github/paradoxysm/sleepens?label=coverage&kill_cache=1)](https://codecov.io/gh/paradoxysm/sleepens)
 [![GitHub](https://flat.badgen.net/github/license/paradoxysm/sleepens)](https://github.com/paradoxysm/sleepens/blob/master/LICENSE)
 
 Sleep Ensemble is a framework for flexible sleep state classification using ensemble learning. It is designed to allow for modular data processing, classification, and further post-processing.
@@ -43,7 +43,7 @@ See the [changelog](https://github.com/paradoxysm/sleepens/blob/master/CHANGES.m
 
 ## Development
 
-[![Code Climate maintainability](https://img.shields.io/codeclimate/maintainability-percentage/paradoxysm/sleepens?style=flat-square)](https://codeclimate.com/github/paradoxysm/sleepens/maintainability)
+[![Code Climate maintainability](https://img.shields.io/codeclimate/maintainability-percentage/paradoxysm/sleepens?style=flat-square&kill_cache=1)](https://codeclimate.com/github/paradoxysm/sleepens/maintainability)
 
 `sleepens` is in heavy development. Don't look, it's embarrassing!
 
