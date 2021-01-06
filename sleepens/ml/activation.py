@@ -1,7 +1,10 @@
+"""Activation Functions"""
+
+# Authors: Jeffrey Wang
+# License: BSD 3 clause
+
 import numpy as np
 from abc import ABC, abstractmethod
-
-from sleepens.utils._base import Base
 
 def get_activation(name):
 	"""
@@ -44,7 +47,7 @@ def get_activation(name):
 	elif isinstance(name, (Activation, type(None))) : return name
 	else : raise ValueError("Invalid activation function")
 
-class Activation(Base, ABC):
+class Activation(ABC):
 	"""
 	Base Activation class.
 	"""

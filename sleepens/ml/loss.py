@@ -1,7 +1,10 @@
+"""Loss Functions"""
+
+# Authors: Jeffrey Wang
+# License: BSD 3 clause
+
 import numpy as np
 from abc import ABC, abstractmethod
-
-from sleepens.utils._base import Base
 
 def get_loss(name):
 	"""
@@ -35,7 +38,7 @@ def get_loss(name):
 	else : raise ValueError("Invalid loss function")
 
 
-class LossFunction(Base, ABC):
+class LossFunction(ABC):
 	"""
 	Base Loss Function.
 

@@ -1,7 +1,5 @@
-from ._sleepens import AbstractSleepEnsemble
-from ._sleepens_static import StaticSleepEnsemble
+from .app._base_sleepens import ShellSleepEnsemble as SleepEnsemble
 
 __all__ = [
-            'AbstractSleepEnsemble',
-			'StaticSleepEnsemble',
-        ]
+			'SleepEnsemble'
+		]

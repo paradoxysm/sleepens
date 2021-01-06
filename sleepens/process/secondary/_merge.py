@@ -6,6 +6,7 @@
 import numpy as np
 
 from sleepens.io import Dataset
+from sleepens.utils import aggregate
 
 def merge(ds, name=None, feature='MERGE', method='mean', axis=1):
 	"""
@@ -26,11 +27,6 @@ def merge(ds, name=None, feature='MERGE', method='mean', axis=1):
 		Merged feature data.
 	"""
 	data = ds.data
-	if method == 'mean' : data = np.mean(data, axis=axis)
-	elif method == 'median' : data = np.median(data, axis=axis)
-	elif method == 'max' : data = np.max(data, axis=axis)
-	elif method == 'min' : data = np.min(data, axis=axis)
-	elif method == 'sum' : data = np.sum(data, axis=axis)
-	else : raise ValueError("Provided method argument must be 'mean','max','min', or 'sum'")
+	data = aggregate(data, method, axis=axis)
 	data = data.reshape(-1,1)
 	return Dataset(name=name, features=[feature], data=data)

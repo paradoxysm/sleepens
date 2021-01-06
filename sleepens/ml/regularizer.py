@@ -1,7 +1,10 @@
+"""Regularization Algorithms"""
+
+# Authors: Jeffrey Wang
+# License: BSD 3 clause
+
 import numpy as np
 from abc import ABC, abstractmethod
-
-from sleepens.utils._base import Base
 
 def get_regularizer(name):
 	"""
@@ -30,7 +33,7 @@ def get_regularizer(name):
 	elif isinstance(name, (type(None), Regularizer)) : return name
 	else : raise ValueError("Invalid regularizer")
 
-class Regularizer(Base, ABC):
+class Regularizer(ABC):
 	"""
 	Base Regularizer.
 	"""
@@ -179,7 +182,7 @@ def get_constraint(name):
 	elif isinstance(name, (None, Constraint)) : return name
 	else : raise ValueError("Invalid regularizer")
 
-class Constraint(Base, ABC):
+class Constraint(ABC):
 	"""
 	Base Constraint Function.
 	"""
