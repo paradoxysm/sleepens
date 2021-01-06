@@ -82,6 +82,29 @@ def ask_directory(title="Choose Folder"):
 	root.destroy()
 	return folder
 
+def print_classification_report(Y_hat, Y):
+	report = classification_report(Y_hat, Y)
+	beta = report.pop('beta')
+	support = report.pop('support')
+	accuracy = report.pop('accuracy')
+	macro = report.pop('macro avg')
+	weighted = report.pop('weighted avg')
+	header = ["Precision", "Recall", "F1-Score", "Support"]
+	print("Classification Report")
+	print("-"*30)
+	row_format = "{:>15}" * (len(header) + 1)
+	print(row_format.format("", *header))
+	for k, v in report.items():
+		print(row_format.format(k, "%.4f" % v['precision'], "%.4f" % v['recall'],
+								"%.4f" % v['f-score'], "%.f" % v['support']))
+	print("")
+	print(row_format.format('accuracy', "", "", "%.4f" % accuracy, "%.f" % support))
+	print(row_format.format('macro avg', "%.4f" % macro['precision'], "%.4f" % macro['recall'],
+							"%.4f" % macro['f-score'], "%.f" % support))
+	print(row_format.format('weighted avg', "%.4f" % weighted['precision'], "%.4f" % weighted['recall'],
+							"%.4f" % weighted['f-score'], "%.f" % support))
+	print("-"*30)
+
 def classify():
 	global model, verbose
 	print("-"*30)
@@ -238,8 +261,7 @@ def validate():
 	print("Overall Score:", score)
 	p_overall = np.concatenate(p)
 	labels_overall = np.concatenate(labels)
-	# Print text classification report
-	#pprint(classification_report(p_overall.reshape(-1), labels_overall.reshape(-1)))
+	classification_report(p_overall.reshape(-1), labels_overall.reshape(-1)))
 	if save_input:
 		if verbose > 1 : print("Writing results")
 		for i in range(len(p)):
