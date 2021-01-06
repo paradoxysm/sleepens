@@ -1,7 +1,6 @@
 numpy
 tqdm
 sklearn
-matplotlib
-scipy
 xlrd
 xlwt
+joblib
