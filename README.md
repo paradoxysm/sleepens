@@ -35,7 +35,7 @@ predictions = SleepEnsemble.predict(data)
 
 The underlying data processing pipelines and classification models are modular and can be adjusted to create different sleep ensemble models.
 
-For full details on usage, see the [documentation](https://github.com/paradoxysm/metanetwork/tree/master/doc).
+For full details on usage, see the [documentation](https://github.com/paradoxysm/sleepens/tree/master/doc).
 
 ## Changelog
 
