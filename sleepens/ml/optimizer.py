@@ -1,7 +1,10 @@
+"""Optimization Algorithms"""
+
+# Authors: Jeffrey Wang
+# License: BSD 3 clause
+
 import numpy as np
 from abc import ABC, abstractmethod
-
-from sleepens.utils._base import Base
 
 def get_optimizer(name):
 	"""
@@ -32,7 +35,7 @@ def get_optimizer(name):
 	elif isinstance(name, (type(None), Optimizer)) : return name
 	else : raise ValueError("Invalid optimizer")
 
-class Optimizer(Base, ABC):
+class Optimizer(ABC):
 	"""
 	Base Optimizer
 	"""

@@ -24,10 +24,9 @@ setup(
 		'numpy',
 		'tqdm',
 		'sklearn',
-        'matplotlib',
-        'scipy',
         'xlrd',
         'xlwt',
+		'joblib'
     ],
 	python_requires='>=3.4, <4',
 	classifiers=[
@@ -47,5 +46,5 @@ setup(
 		'Topic :: Scientific/Engineering :: Information Analysis',
 		'Intended Audience :: Science/Research',
     ],
-	keywords=['python', 'ml', 'ensemble', 'neural-network', 'sleep', 'classification'],
+	keywords=['python', 'ml', 'ensemble', 'sleep', 'classification'],
     zip_safe=True)

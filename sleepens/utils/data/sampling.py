@@ -1,7 +1,12 @@
+"""Oversampling Functions"""
+
+# Authors: Jeffrey Wang
+# License: BSD 3 clause
+
 import numpy as np
 from sklearn.mixture import GaussianMixture as GMM
 
-from sleepens.utils.misc import separate_by_label, create_random_state
+from sleepens.utils import separate_by_label, create_random_state
 
 def balance(data, labels, desired=None, balance='auto',
 							seed=None, verbose=0):
@@ -56,7 +61,7 @@ def balance(data, labels, desired=None, balance='auto',
 	"""
 	if len(data) == 0:
 		if verbose : print("No data to oversample")
-		return data, labels
+		return np.array([]), np.array([])
 	if verbose > 0 : print("Balancing Dataset")
 	data = separate_by_label(data, labels)
 	separated = data
@@ -75,10 +80,6 @@ def balance(data, labels, desired=None, balance='auto',
 			target = balance
 		n_samples = {k: target - len(separated[k]) for k in separated.keys()}
 		n_samples = {k: 0 if n_samples[k] < 0 else n_samples[k] for k in separated.keys()}
-	elif isinstance(balance, str) and balance[0] == 'f' and balance[1:].isdigit():
-		if verbose > 0 : print("Upscaling Dataset by a factor of", balance[1:])
-		factor = int(balance[1:])
-		n_samples = {k: factor * len(separated[k]) for k in separated.keys()}
 	elif isinstance(balance, (dict)):
 		if verbose > 0 : print("Balancing Dataset. Method set to custom")
 		n_samples = balance
@@ -87,7 +88,7 @@ def balance(data, labels, desired=None, balance='auto',
 	if verbose > 0 : print("Oversampling")
 	return _generative_oversample(separated, n_samples, seed=seed, verbose=verbose)
 
-def multiply(data, labels, factor=1, seed=None, verbose=0):
+def scale(data, labels, factor=1, seed=None, verbose=0):
 	"""
 	Oversample the dataset.
 
@@ -127,11 +128,55 @@ def multiply(data, labels, factor=1, seed=None, verbose=0):
 	if factor <= 0 : raise ValueError("Factor must be positive")
 	if len(data) == 0:
 		if verbose > 0 : print("No data to oversample")
-		return data, labels
-	if verbose > 0 : print("Generative Oversampling")
+		return np.array([]), np.array([])
+	if verbose > 0 : print("Scaling Dataset")
 	separated = separate_by_label(data, labels)
 	n_samples = {k: int(factor * len(separated[k])) for k in separated.keys()}
 	return _generative_oversample(separated, n_samples, seed=seed, verbose=verbose)
+
+def sample(data, labels, sizes, seed=None, verbose=0):
+	"""
+	Sample from the dataset.
+
+	Model a generative algorithm over each of the
+	desired labelled data to sample more data from
+	the resulting distributions.
+
+	Parameters
+	----------
+	data : array-like, shape=(n_samples, n_features)
+		Data.
+
+	labels : array-like, shape=(n_samples,)
+		Labels corresponding to data.
+
+	sizes : dict
+		Number of samples for each class.
+
+	seed : None or int or RandomState, default=None
+		Initial seed for the RandomState. If seed is None,
+		return the RandomState singleton. If seed is an int,
+		return a RandomState with the seed set to the int.
+		If seed is a RandomState, return that RandomState.
+
+	verbose : int, default=0
+		Verbosity; higher values result in
+		more verbose output.
+
+	Returns
+	-------
+	data : ndarray
+		All oversampled data, shuffled.
+
+	labels : ndarray
+		All corresponding labels.
+	"""
+	if len(data) == 0:
+		if verbose > 0 : print("No data to oversample")
+		return np.array([]), np.array([])
+	if verbose > 0 : print("Sampling Dataset")
+	separated = separate_by_label(data, labels)
+	return _generative_oversample(separated, sizes, seed=seed, verbose=verbose)
 
 def _generative_oversample(data_labels, n_samples, seed=None, verbose=0):
 	"""
@@ -166,7 +211,7 @@ def _generative_oversample(data_labels, n_samples, seed=None, verbose=0):
 	"""
 	oversampled = {}
 	for label in data_labels:
-		if n_samples[label] == 0 : continue
+		if n_samples[label] == 0 or len(data_labels[label]) < 2 : continue
 		if verbose > 0 : print("\tModelling distribution for", str(label))
 		model = _fit_cluster(data_labels[label], seed=seed)
 		if verbose > 0 : print("\tSampling data for", str(label))
@@ -180,6 +225,7 @@ def _generative_oversample(data_labels, n_samples, seed=None, verbose=0):
 		new_set += list(np.concatenate((oversampled[k], labels), axis=1))
 	create_random_state(seed=seed).shuffle(new_set)
 	new_set = np.array(new_set)
+	if new_set.size == 0 : return np.array([]), np.array([]).astype(int)
 	return new_set[:,:-1], new_set[:,-1].astype(int)
 
 def _fit_cluster(data, seed=None):
@@ -208,6 +254,7 @@ def _fit_cluster(data, seed=None):
 	abic = []
 	n_components = min([len(data), 10])
 	for i in range(n_components):
+		if len(data) < 2 * (i+1) : continue
 		m = GMM(n_components=i+1, n_init=5, random_state=seed)
 		m.fit(data)
 		models.append(m)

@@ -3,7 +3,7 @@ import xlwt
 import os
 import numpy as np
 
-from sleepens.utils.misc import is_float, is_int
+from sleepens.utils import is_float, is_int
 
 class Dataset:
 	def __init__(self, name=None, features=None, label_names=None,
@@ -40,13 +40,17 @@ class Dataset:
 	def write(self, loc):
 		header = np.concatenate((self.features, self.label_names))
 		header = header.reshape(1, len(header))
-		contents = np.concatenate((self.data, self.labels), axis=1)
+		if len(self.labels) > 0:
+			labels = self.labels.reshape(-1,len(self.label_names))
+			contents = np.concatenate((self.data, labels), axis=1)
+		else:
+			contents = self.data
 		if header.shape[1] != contents.shape[1]:
 			raise ValueError("Dimensions of header and data do not match")
 		filepath = loc + '/' + self.name + '.xls'
 		if os.path.isfile(filepath) : os.remove(filepath)
 		wb = xlwt.Workbook()
-		ws = wb.add_sheet(self.name)
+		ws = wb.add_sheet("Results")
 		output = np.concatenate((header, contents))
 		for row in range(output.shape[0]):
 			for col in range(output.shape[1]):
@@ -106,16 +110,22 @@ class Dataset:
 		return self
 
 	def clean(self):
-		length = min([len(self.data), len(self.labels)])
-		self.data = self.data[:length]
-		self.labels = self.labels[:length]
+		if len(self.label_names) > 0:
+			length = min([len(self.data), len(self.labels)])
+			self.data = self.data[:length]
+			self.labels = self.labels[:length]
+		else:
+			self.labels = np.array([])
 		return self
 
 """
 MISCELLANEOUS FUNCTIONS
 """
 def read_cell(data_sheet, row, col):
-	cell = data_sheet.cell_value(row, col)
+	try:
+		cell = data_sheet.cell_value(row, col)
+	except:
+		print(row, col)
 	if is_float(cell) : cell = float(cell)
 	elif is_int(cell) : cell = int(cell)
 	return cell
