@@ -30,7 +30,7 @@ from sleepens import SleepEnsemble
 model = SleepEnsemble.load("/path/to/model.joblib")
 
 # Classify your data
-predictions = SleepEnsemble.predict(data)
+predictions = model.predict(data)
 ```
 
 The underlying data processing pipelines and classification models are modular and can be adjusted to create different sleep ensemble models.

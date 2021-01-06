@@ -26,23 +26,3 @@ class RemFix(AbstractAddon):
 			if rem_count == min_size : p[i:i+min_size] = 3
 			i -= 1
 		return p
-
-'''
-Go backwards
-If has been above 0.5? or the last one is above 0.5? = threshold is 0.3 to extend
-If not = threshold is 0.075? or 0.1? or 0.06? or 0.03? for at least 3? or 2? epochs to create
-Cannot extend a REM by more than 3? no limit?
-
-or some averaging threshold = average must be above 0.08? 0.07? 0.06? etc? across at least 4? 3? 2? epochs
-ROlling average size 3? or 2?
-Starting threshold of 0.03 then begin averaging
-Keep going so long as average meets threshold and current is above 0.02?
-Don't replace AW? Don't replace QW if its later in forward direction? (can replace QW but only after replacing NR)
-
-Also implement QW+AW sensitivity?
-
-Order:
-1. REM sensitivity
-2. QW+AW sensitivity
-3. Transition
-'''

@@ -160,8 +160,7 @@ def train():
 	print("Training from model:", model.name)
 	print("Select files to use for training")
 	print("This model is configured to accept", model.reader.standard)
-	#filepaths = ask_filenames(filetypes=model.reader.filetypes)
-	filepaths = ask_filenames()
+	filepaths = ask_filenames(filetypes=model.reader.filetypes)
 	if len(filepaths) == 0:
 		print("You didn't select any files! Returning you to the main menu")
 		return
@@ -171,16 +170,12 @@ def train():
 	else : jobs = range(len(filepaths))
 	for i in jobs:
 		if verbose > 1 : print("Reading", filepaths[i])
-		'''d, l = model.read(filepaths[i], labels=True)
+		d, l = model.read(filepaths[i], labels=True)
 		name = Path(filepaths[i]).stem
-		ds_ = model.process(d, l, name)'''
-		ds_ = Dataset()
-		ds_.read([filepaths[i]], cols=np.arange(16), label_cols=[16])
-		d, l = ds_.data, ds_.labels
-		d -= np.mean(d, axis=0)
+		ds_ = model.process(d, l, name)
 		ds.append(ds_)
-		data.append(d)
-		labels.append(l)
+		data.append(ds_.data)
+		labels.append(ds_.labels)
 	print("Training model on", len(np.concatenate(data)), "samples")
 	model.fit(data, labels)
 	print("Completed Training!")
@@ -204,8 +199,7 @@ def validate():
 	print("-"*30)
 	print("Select files to use for validation:")
 	print("This model is configured to accept", model.reader.standard)
-	#filepaths = ask_filenames(filetypes=model.reader.filetypes)
-	filepaths = ask_filenames()
+	filepaths = ask_filenames(filetypes=model.reader.filetypes)
 	if len(filepaths) == 0:
 		print("You didn't select any files! Returning you to the main menu")
 		return
@@ -223,16 +217,12 @@ def validate():
 	else : jobs = range(len(filepaths))
 	for i in jobs:
 		if verbose > 1 : print("Reading", filepaths[i])
-		'''d, l = model.read(filepaths[i], labels=True)
+		d, l = model.read(filepaths[i], labels=True)
 		name = Path(filepaths[i]).stem
-		ds_ = model.process(d, l, name)'''
-		ds_ = Dataset()
-		ds_.read([filepaths[i]], cols=np.arange(16), label_cols=[16])
-		d, l = ds_.data, ds_.labels
-		d -= np.mean(d, axis=0)
+		ds_ = model.process(d, l, name)
 		ds.append(ds_)
-		data.append(d)
-		labels.append(l)
+		data.append(ds_.data)
+		labels.append(ds_.labels)
 	if req_train:
 		p, Y_hat = model.cross_validate(data, labels)
 	else:
@@ -249,7 +239,7 @@ def validate():
 	p_overall = np.concatenate(p)
 	labels_overall = np.concatenate(labels)
 	# Print text classification report
-	#pprint(classification_report(p_overall, labels_overall))
+	#pprint(classification_report(p_overall.reshape(-1), labels_overall.reshape(-1)))
 	if save_input:
 		if verbose > 1 : print("Writing results")
 		for i in range(len(p)):
