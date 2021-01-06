@@ -94,8 +94,8 @@ def print_classification_report(Y_hat, Y):
 	print("-"*30)
 	row_format = "{:>15}" * (len(header) + 1)
 	print(row_format.format("", *header))
-	for k, v in report.items():
-		print(row_format.format(k, "%.4f" % v['precision'], "%.4f" % v['recall'],
+	for k, v in sorted(report.items()):
+		print(row_format.format("%.f" % k, "%.4f" % v['precision'], "%.4f" % v['recall'],
 								"%.4f" % v['f-score'], "%.f" % v['support']))
 	print("")
 	print(row_format.format('accuracy', "", "", "%.4f" % accuracy, "%.f" % support))
