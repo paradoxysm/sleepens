@@ -157,7 +157,7 @@ class Classifier(ABC):
 		"""
 		return np.log(self.predict_proba(X))
 
-	def feature_importance(self, X, Y, loss=None, sort=True):
+	def feature_importance(self, X, Y, loss='mse', sort=True):
 		"""
 		Return the importances of features through Permutation
 		Feature Importance (PFI). In PFI, the fitted classifier
@@ -219,7 +219,7 @@ class Classifier(ABC):
 		for f in range(X.shape[1]):
 			X_p = deepcopy(X)
 			self.random_state.shuffle(X_p[:,f])
-			p_ = self.predict_proba(X)
+			p_ = self.predict_proba(X_p)
 			error_ = loss.loss(p_, Y_one_hot)
 			importances.append((f, np.exp(error_) / error))
 		if sort:
@@ -356,16 +356,17 @@ class TimeSeriesClassifier(Classifier):
 		try : X_, Y_ = np.concatenate(X), np.concatenate(Y)
 		except : raise ValueError("Inputs have different number of features")
 		if self.verbose > 1 : print("Calculating feature importances")
-		Y_one_hot = [one_hot(y) for y in Y]
-		p = np.concatenate([self.predict_proba(x) for x in X])
-		error = np.exp(loss.loss(p, np.concatenate(Y_one_hot)))
+		Y_one_hot = np.concatenate([one_hot(y) for y in Y])
+		p = np.concatenate(self.predict_proba(X))
+		error = np.mean(np.exp(loss.loss(p, Y_one_hot)))
 		importances = []
 		for f in range(X_.shape[1]):
+			if self.verbose > 2 : print("Permuting feature", f+1)
 			X_p = [deepcopy(x) for x in X]
 			for x in X_p : self.random_state.shuffle(x[:,f])
-			p_ = np.concatenate([self.predict_proba(x) for x in X])
-			error_ = loss.loss(p_, np.concatenate(Y_one_hot))
-			importances.append((f, np.exp(error_) / error))
+			p_ = np.concatenate(self.predict_proba(X_p))
+			error_ = np.mean(np.exp(loss.loss(p_, Y_one_hot)))
+			importances.append((f, error_ / error))
 		if sort:
 			return sorted(importances, key=lambda x: x[1])
 		return importances
