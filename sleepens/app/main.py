@@ -275,7 +275,7 @@ def validate():
 	print("Overall Score:", score)
 	p_overall = np.concatenate(p)
 	labels_overall = np.concatenate(labels)
-	print_report(p_overall.reshape(-1), labels_overall.reshape(-1)))
+	print_report(p_overall.reshape(-1), labels_overall.reshape(-1))
 	if save_input:
 		if verbose > 1 : print("Writing results")
 		for i in range(len(p)):
