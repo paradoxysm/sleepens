@@ -1,8 +1,8 @@
-from ._base_model import check_estimator, check_timeseries_estimator
 from .activation import get_activation
 from .loss import get_loss
 from .regularizer import get_regularizer, get_constraint
 from .optimizer import get_optimizer
+from ._base_model import check_estimator, check_timeseries_estimator
 from ._cv import cross_validate
 from ._randomizedsearch import RandomizedSearch
 

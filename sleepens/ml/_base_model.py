@@ -5,10 +5,12 @@
 
 from abc import ABC, abstractmethod
 import numpy as np
+from copy import deepcopy
 from sklearn.utils.validation import check_is_fitted
 
 from sleepens.analysis import get_metrics
-from sleepens.utils import create_random_state, check_XY
+from sleepens.utils import create_random_state, check_XY, one_hot
+from sleepens.ml import get_loss
 
 def check_estimator(estimator):
 	"""
@@ -155,7 +157,7 @@ class Classifier(ABC):
 		"""
 		return np.log(self.predict_proba(X))
 
-	def feature_importance(self, X, Y, metric=None, sort=True):
+	def feature_importance(self, X, Y, loss=None, sort=True):
 		"""
 		Return the importances of features through Permutation
 		Feature Importance (PFI). In PFI, the fitted classifier
@@ -182,17 +184,16 @@ class Classifier(ABC):
 		Y : array-like, shape=(n_samples,)
 			Target labels as integers.
 
-		metric : Metric, None, str, default=None
-			Metric to look up. Must be one of:
-			 - 'accuracy' : Accuracy.
-			 - 'precision' : Precision.
-			 - 'recall' : Recall.
-			 - 'f-score' : F1-Score.
-			 - 'roc-auc' : ROC-AUC.
-			 - Metric : A custom implementation.
-			 - None : Use this Classifier's metric.
-			Custom Metrics must implement `score` which
-			by default should return a single float value.
+		loss : LossFunction, str
+			LossFunction to look up. Must be one of:
+			 - 'mse' : Mean Squared Error.
+			 - 'mae' : Mean Absolute Error.
+			 - 'huber' : Huber Loss.
+			 - 'hinge' : Hinge Loss.
+			 - 'cross-entropy' : Crossentropy Loss.
+			 - LossFunction : A custom implementation.
+			Custom LossFunctions must implement `loss`, `gradient`
+			functions and contain `scale` attribute.
 
 		sort : bool, default=True
 			Determine if the feature importances should be sorted.
@@ -207,21 +208,20 @@ class Classifier(ABC):
 		"""
 		if not self._is_fitted():
 			raise RuntimeError("Model has not been initialized")
-		if metric is None : metric = self.metric
-		elif not issubclass(metric, Metric):
-			raise ValueError("score must be a Metric or None")
+		if loss is None : raise ValueError("loss cannot be None")
+		loss = get_loss(loss)
 		X, Y = check_XY(X=X, Y=Y)
-		if X.shape[1] != self.n_features_:
-			raise ValueError("Model expects %d features" % self.n_features_,
-								"but input has %d features" % X.shape[1])
 		if self.verbose > 1 : print("Calculating feature importances")
-		loss = np.exp(self.score(self.predict_proba(X), Y))
+		Y_one_hot = one_hot(Y)
+		p = self.predict_proba(X)
+		error = np.exp(loss.loss(p, Y_one_hot))
 		importances = []
 		for f in range(X.shape[1]):
-			X_ = copy(X)
-			self.random_state.shuffle(X_[:,f])
-			loss_ = score.score(self.predict_proba(X_), Y)
-			importances.append((f, np.exp(loss_) / loss))
+			X_p = deepcopy(X)
+			self.random_state.shuffle(X_p[:,f])
+			p_ = self.predict_proba(X)
+			error_ = loss.loss(p_, Y_one_hot)
+			importances.append((f, np.exp(error_) / error))
 		if sort:
 			return sorted(importances, key=lambda x: x[1])
 		return importances
@@ -298,6 +298,84 @@ class TimeSeriesClassifier(Classifier):
 
 	def predict_log_proba(self, X):
 		return [np.log(y) for y in self.predict_proba(X)]
+
+	def feature_importance(self, X, Y, loss='mse', sort=True):
+		"""
+		Return the importances of features through Permutation
+		Feature Importance (PFI). In PFI, the fitted classifier
+		predicts over data where one feature has been permuted randomly.
+		The resulting change in score provides a measure of that feature's
+		importance.
+
+		Take care when working with data that contains correlated features.
+		The results of PFI may not represent true feature importances in such cases,
+		due to either permutations resulting in impossible data or a reduction in
+		apparent feature importance due to the sharing of utility among correlated features.
+
+		If conducted with the training data, PFI shows the most salient features
+		used by the classifier. If conducted with unseen data, PFI describes
+		the most valuable features for predictions.
+
+		Remember that PFI relates to the specific classifier in question.
+
+		Parameters
+		----------
+		X : list of ndarray, shape=(n_series, n_samples, n_features)
+			Data.
+
+		Y : list of ndarray, shape=(n_series, n_samples,)
+			Target labels as integers.
+
+		loss : LossFunction, str
+			LossFunction to look up. Must be one of:
+			 - 'mse' : Mean Squared Error.
+			 - 'mae' : Mean Absolute Error.
+			 - 'huber' : Huber Loss.
+			 - 'hinge' : Hinge Loss.
+			 - 'cross-entropy' : Crossentropy Loss.
+			 - LossFunction : A custom implementation.
+			Custom LossFunctions must implement `loss`, `gradient`
+			functions and contain `scale` attribute.
+
+		sort : bool, default=True
+			Determine if the feature importances should be sorted.
+
+		Returns
+		-------
+		importances : list of tuple (feature, importance)
+			List of each feature and the corresponding importance.
+			The feature is labelled numerically in the order they appear
+			in the data. Importance is the change in the score
+			from permuting that feature.
+		"""
+		if not self._is_fitted():
+			raise RuntimeError("Model has not been initialized")
+		if loss is None : raise ValueError("loss cannot be None")
+		loss = get_loss(loss)
+		for x, y in zip(X, Y) : check_XY(X=x, Y=y)
+		try : X_, Y_ = np.concatenate(X), np.concatenate(Y)
+		except : raise ValueError("Inputs have different number of features")
+		if self.verbose > 1 : print("Calculating feature importances")
+		Y_one_hot = [one_hot(y) for y in Y]
+		p = np.concatenate([self.predict_proba(x) for x in X])
+		error = np.exp(loss.loss(p, np.concatenate(Y_one_hot)))
+		importances = []
+		for f in range(X_.shape[1]):
+			X_p = [deepcopy(x) for x in X]
+			for x in X_p : self.random_state.shuffle(x[:,f])
+			p_ = np.concatenate([self.predict_proba(x) for x in X])
+			error_ = loss.loss(p_, np.concatenate(Y_one_hot))
+			importances.append((f, np.exp(error_) / error))
+		if sort:
+			return sorted(importances, key=lambda x: x[1])
+		return importances
+
+	def score(self, Y_hat, Y):
+		if self.metric is not None:
+			scores = [self.metric.score(y_hat, y) for y_hat, y in zip(Y_hat, Y)]
+			lengths = [len(y_hat) for y_hat in Y_hat]
+			return np.average(scores, weights=lengths)
+		return 0
 
 	def _fit_setup(self, X, Y):
 		for x, y in zip(X, Y) : check_XY(X=x, Y=y)
