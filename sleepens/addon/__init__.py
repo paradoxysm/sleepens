@@ -1,5 +1,5 @@
-from ._rem_fix import RemFix
+from ._transition_fix import TransitionFix
 
 __all__ = [
-			'RemFix',
+			'TransitionFix',
 		]

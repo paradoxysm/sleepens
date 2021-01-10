@@ -1,9 +1,13 @@
+"""Metrics"""
+
+# Authors: Jeffrey Wang
+# License: BSD 3 clause
+
 from abc import ABC, abstractmethod
 from sklearn import metrics
 import numpy as np
 
 from sleepens.utils import check_XY
-
 
 def get_metrics(name):
 	"""
