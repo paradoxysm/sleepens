@@ -1,3 +1,8 @@
+"""Batch Dataset"""
+
+# Authors: Jeffrey Wang
+# License: BSD 3 clause
+
 import numpy as np
 
 from sleepens.utils import create_random_state

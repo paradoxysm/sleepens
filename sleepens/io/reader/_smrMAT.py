@@ -10,6 +10,28 @@ from sleepens.io import DataObject
 from sleepens.io._base_reader import AbstractReader
 
 class smrMATReader(AbstractReader):
+	"""
+	Reader for .mat files exported by Spike2 v7.
+
+	Parameters
+	----------
+	verbose : int, default=0
+		Determines the verbosity of cross-validation.
+		Higher verbose levels result in more output logged.
+
+	Attributes
+	----------
+	name : string
+		Name of the Reader.
+
+	standard : string
+		The name of accepted filetypes the Reader accepts.
+
+	filetypes : list of tuple
+		The accepted filetypes of the Reader.
+		Each tuple pair consists of the filetype name
+		followed by regex for the filetype.
+	"""
 	name = "smrMAT"
 	standard = ".mat files exported by Spike2 v7"
 	filetypes = [("MAT-files", "*.mat")]
