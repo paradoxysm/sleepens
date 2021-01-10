@@ -22,7 +22,29 @@ class StackedTimeSeriesEnsemble(TimeSeriesClassifier):
 		self.set_verbose(verbose)
 		self.set_random_state(random_state)
 
+	def _initialize(self):
+		"""
+		Initialize the parameters of the classifier.
+		"""
+		self.set_warm_start(self.warm_start)
+
 	def fit(self, X, Y):
+		"""
+		Train the classifier on the given data and labels.
+
+		Parameters
+		----------
+		X : array-like, shape=(n_samples, n_features)
+			Training data.
+
+		Y : array-like, shape=(n_samples,)
+			Target labels as integers.
+
+		Returns
+		-------
+		self : Classifier
+			Fitted classifier.
+		"""
 		X, Y = self._fit_setup(X, Y)
 		if self.verbose > 1 : print("Fitting First Layer")
 		score, X_2 = cross_validate(self.layer_1, X, Y, verbose=self.verbose-1)
@@ -33,6 +55,19 @@ class StackedTimeSeriesEnsemble(TimeSeriesClassifier):
 		return self
 
 	def predict_proba(self, X):
+		"""
+		Return the prediction probabilities on the given data.
+
+		Parameters
+		----------
+		X : list of ndarray, shape=(n_series, n_samples, n_features)
+			Data to predict.
+
+		Returns
+		-------
+		Y_hat : list of ndarray, shape=(s_series, n_samples, n_classes)
+			Probability predictions.
+		"""
 		X = self._predict_setup(X)
 		if self.verbose > 1 : print("Predicting on First Layer")
 		X_2 = self.layer_1.predict_proba(X)
@@ -42,26 +77,86 @@ class StackedTimeSeriesEnsemble(TimeSeriesClassifier):
 		return Y_hat
 
 	def set_verbose(self, verbose):
+		"""
+		Set the verbosity of the Classifier.
+		Subsidiary Classifiers have their verbosity
+		suppressed by one compared to this Classifier.
+
+		Parameters
+		----------
+		verbose : int, default=0
+			Determines the verbosity of cross-validation.
+			Higher verbose levels result in more output logged.
+		"""
 		TimeSeriesClassifier.set_verbose(self, verbose)
 		for e in (self.layer_1, self.layer_2):
 			e.set_verbose(verbose-1)
 
 	def set_random_state(self, random_state):
+		"""
+		Set the RandomState of the Classifier.
+		Subsidiary Classifiers set their RandomState
+		based on this RandomState with a seed selected
+		from 0 to 2**16.
+
+		Parameters
+		----------
+		random_state : None or int or RandomState, default=None
+			Initial seed for the RandomState. If `random_state` is None,
+			return the RandomState singleton. If `random_state` is an int,
+			return a RandomState with the seed set to the int.
+			If `random_state` is a RandomState, return that RandomState.
+		"""
 		TimeSeriesClassifier.set_random_state(self, random_state)
 		for e in (self.layer_1, self.layer_2):
 			e.set_random_state(self.random_state.randint(0, 2**16))
 
 	def set_metric(self, metric):
+		"""
+		Set the metric of the Classifier.
+
+		Parameters
+		----------
+		metric : Metric, None, str
+			Metric to look up. Must be one of:
+			 - 'accuracy' : Accuracy.
+			 - 'precision' : Precision.
+			 - 'recall' : Recall.
+			 - 'f-score' : F1-Score.
+			 - 'roc-auc' : ROC-AUC.
+			 - Metric : A custom implementation.
+			 - None : Return None.
+			Custom Metrics must implement `score` which
+			by default should return a single float value.
+		"""
 		TimeSeriesClassifier.set_metric(self, metric)
 		for e in (self.layer_1, self.layer_2):
 			e.set_metric(metric)
 
 	def set_warm_start(self, warm_start):
+		"""
+		Set the status of `warm_start` of the Classifier.
+
+		Parameters
+		----------
+		warm_start : bool
+			Determines warm starting to allow training to pick
+			up from previous training sessions.
+		"""
 		TimeSeriesClassifier.set_warm_start(self, warm_start)
 		for e in (self.layer_1, self.layer_2):
 			e.set_warm_start(warm_start)
 
 	def _is_fitted(self):
+		"""
+		Returns if the Classifier has been trained and is
+		ready to predict new data.
+
+		Returns
+		-------
+		fitted : bool
+			True if the Classifier is fitted, False otherwise.
+		"""
 		attributes = ["n_classes_","n_features_"]
 		return TimeSeriesClassifier._is_fitted(self, attributes=attributes) and \
 				self.layer_1._is_fitted() and self.layer_2._is_fitted()

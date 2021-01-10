@@ -52,10 +52,10 @@ def cross_validate(estimator, X, Y, cv=5, repeat=1, metric='accuracy', random_st
 		by default should return a single float value.
 
 	random_state : None or int or RandomState, default=None
-		Initial seed for the RandomState. If seed is None,
-		return the RandomState singleton. If seed is an int,
+		Initial seed for the RandomState. If `random_state` is None,
+		return the RandomState singleton. If `random_state` is an int,
 		return a RandomState with the seed set to the int.
-		If seed is a RandomState, return that RandomState.
+		If `random_state` is a RandomState, return that RandomState.
 
 	shuffle : bool, default=True
 		Determine if cross-validation should shuffle the data.
