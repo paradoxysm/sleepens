@@ -7,6 +7,52 @@ from sleepens.ml._base_model import TimeSeriesClassifier
 from sleepens.ml.models import TimeSeriesEnsemble
 
 class StackedTimeSeriesEnsemble(TimeSeriesClassifier):
+	"""
+	A Stacked Time Series Ensemble is an Ensemble Classifier that
+	stacks two Time Series Classifiers to better classify time series data.
+
+	Parameters
+	----------
+	layer_1 : TimeSeriesClassifier, default=TimeSeriesEnsemble
+		The first layer of TimeSeriesClassifier.
+
+	layer_2 : TimeSeriesClassifier, default=TimeSeriesEnsemble
+		The second layer of TimeSeriesClassifier.
+
+	warm_start : bool, default=False
+		Determines warm starting to allow training to pick
+		up from previous training sessions.
+
+	metric : Metric, None, str, default='accuracy'
+		Metric to look up. Must be one of:
+		 - 'accuracy' : Accuracy.
+		 - 'precision' : Precision.
+		 - 'recall' : Recall.
+		 - 'f-score' : F1-Score.
+		 - 'roc-auc' : ROC-AUC.
+		 - Metric : A custom implementation.
+		 - None : Return None.
+		Custom Metrics must implement `score` which
+		by default should return a single float value.
+
+	random_state : None or int or RandomState, default=None
+		Initial seed for the RandomState. If `random_state` is None,
+		return the RandomState singleton. If `random_state` is an int,
+		return a RandomState with the seed set to the int.
+		If seed is a RandomState, return that RandomState.
+
+	verbose : int, default=0
+		Verbosity of estimator; higher values result in
+		more verbose output.
+
+	Attributes
+	----------
+	n_classes_ : int
+		Number of classes.
+
+	n_features_ : int
+		Number of features.
+	"""
 	def __init__(self, layer_1=TimeSeriesEnsemble(), layer_2=TimeSeriesEnsemble(),
 					warm_start=False, metric='accuracy', random_state=None, verbose=0):
 		TimeSeriesClassifier.__init__(self, warm_start=warm_start, metric=metric,
