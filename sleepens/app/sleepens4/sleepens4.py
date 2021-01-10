@@ -9,7 +9,7 @@ from sleepens.app.sleepens4.processor import Sleepens4_Processor
 from sleepens.analysis import get_metrics
 from sleepens.ml import cross_validate
 from sleepens.ml.models import StackedTimeSeriesEnsemble, GradientBoostingClassifier, TimeSeriesEnsemble
-from sleepens.addon import RemFix
+from sleepens.addon import TransitionFix
 
 
 class SleepEnsemble4(AbstractSleepEnsemble):

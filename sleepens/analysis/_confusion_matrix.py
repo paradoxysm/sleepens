@@ -1,52 +1,57 @@
+"""Confusion Matrices"""
+
+# Authors: Jeffrey Wang
+# License: BSD 3 clause
+
 import numpy as np
 
 def confusion_matrix(Y_hat, Y, norm=None):
-		"""
-		Calculate confusion matrix.
+	"""
+	Calculate confusion matrix.
 
-		Parameters
-		----------
-		Y_hat : array-like, shape=(n_samples,)
-			List of data labels.
+	Parameters
+	----------
+	Y_hat : array-like, shape=(n_samples,)
+		List of data labels.
 
-		Y : array-like, shape=(n_samples,)
-			List of target truth labels.
+	Y : array-like, shape=(n_samples,)
+		List of target truth labels.
 
-		norm : {'label', 'target', 'all', None}, default=None
-			Normalization on resulting matrix. Must be one of:
-			 - 'label' : normalize on labels (columns).
-			 - 'target' : normalize on targets (rows).
-			 - 'all' : normalize on the entire matrix.
-			 - None : No normalization.
+	norm : {'label', 'target', 'all', None}, default=None
+		Normalization on resulting matrix. Must be one of:
+		 - 'label' : normalize on labels (columns).
+		 - 'target' : normalize on targets (rows).
+		 - 'all' : normalize on the entire matrix.
+		 - None : No normalization.
 
-		Returns
-		-------
-		matrix : ndarray, shape=(target_classes, label_classes)
-			Confusion matrix with target classes as rows and
-			label classes as columns. Classes are in sorted order.
+	Returns
+	-------
+	matrix : ndarray, shape=(target_classes, label_classes)
+		Confusion matrix with target classes as rows and
+		label classes as columns. Classes are in sorted order.
 
-		target_classes : list, shape=(target_classes,)
-			List of the target classes (rows).
+	target_classes : list, shape=(target_classes,)
+		List of the target classes (rows).
 
-		label_classes : list, shape=(label_classes,)
-			List of the label classes (rows).
-		"""
-		target_classes = sorted(set(Y))
-		label_classes = sorted(set(Y_hat))
-		target_dict = {target_classes[k]: k for k in range(len(target_classes))}
-		label_dict = {label_classes[k]: k for k in range(len(label_classes))}
-		matrix = np.zeros((len(target_classes), len(label_classes)))
-		for label, target in zip(Y_hat, Y):
-			matrix[target_dict[target],label_dict[label]] += 1
-		if norm == 'label':
-			matrix /= np.max(matrix, axis=0).reshape((1,matrix.shape[1]))
-		elif norm == 'target':
-			matrix /= np.max(matrix, axis=1).reshape((matrix.shape[0],1))
-		elif norm == 'all':
-			matrix /= np.max(matrix)
-		elif norm is not None:
-			raise ValueError("Norm must be one of {'label', 'target', 'all', None}")
-		return matrix.astype(int), target_classes, label_classes
+	label_classes : list, shape=(label_classes,)
+		List of the label classes (rows).
+	"""
+	target_classes = sorted(set(Y))
+	label_classes = sorted(set(Y_hat))
+	target_dict = {target_classes[k]: k for k in range(len(target_classes))}
+	label_dict = {label_classes[k]: k for k in range(len(label_classes))}
+	matrix = np.zeros((len(target_classes), len(label_classes)))
+	for label, target in zip(Y_hat, Y):
+		matrix[target_dict[target],label_dict[label]] += 1
+	if norm == 'label':
+		matrix /= np.max(matrix, axis=0).reshape((1,matrix.shape[1]))
+	elif norm == 'target':
+		matrix /= np.max(matrix, axis=1).reshape((matrix.shape[0],1))
+	elif norm == 'all':
+		matrix /= np.max(matrix)
+	elif norm is not None:
+		raise ValueError("Norm must be one of {'label', 'target', 'all', None}")
+	return matrix.astype(int), target_classes, label_classes
 
 def multiconfusion_matrix(Y_hat, Y):
 	"""
