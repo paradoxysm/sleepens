@@ -1,9 +1,9 @@
 from ._transition_fix import TransitionFix
-from ._rem_sensitivity import REMSensivity
+from ._rem_sensitivity import REMSensitivity
 from ._wake_sensitivity import WakeSensitivity
 
 __all__ = [
 			'TransitionFix',
-			'REMSensivity',
+			'REMSensitivity',
 			'WakeSensitivity'
 		]
