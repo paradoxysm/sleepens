@@ -6,7 +6,6 @@ from sleepens.process import primary as prim
 from sleepens.process import secondary as sec
 from sleepens.utils.data import sampling as s
 from sleepens.utils.data import normalize as n
-from sleepens.io.reader import smrMATReader
 from sleepens.io import Dataset
 
 from sleepens.app.sleepens4.params import params
