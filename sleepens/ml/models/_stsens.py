@@ -4,17 +4,17 @@ from tqdm import trange
 from sleepens.analysis import get_metrics
 from sleepens.ml import cross_validate
 from sleepens.ml._base_model import TimeSeriesClassifier
-from sleepens.ml.models import TimeSeriesEnsemble, GradientBoostingClassifier
+from sleepens.ml.models import TimeSeriesEnsemble
 
 class StackedTimeSeriesEnsemble(TimeSeriesClassifier):
 	def __init__(self, layer_1=TimeSeriesEnsemble(), layer_2=TimeSeriesEnsemble(),
 					warm_start=False, metric='accuracy', random_state=None, verbose=0):
 		TimeSeriesClassifier.__init__(self, warm_start=warm_start, metric=metric,
 							random_state=random_state, verbose=verbose)
-		if not isinstance(layer_1, TimeSeriesEnsemble):
-			raise ValueError("Layer 1 must be a TimeSeriesEnsemble")
-		if not isinstance(layer_2, TimeSeriesEnsemble):
-			raise ValueError("Layer 2 must be a TimeSeriesEnsemble")
+		if not issubclass(type(layer_1), TimeSeriesClassifier):
+			raise ValueError("Layer 1 must be a TimeSeriesClassifier")
+		if not issubclass(type(layer_2), TimeSeriesClassifier):
+			raise ValueError("Layer 2 must be a TimeSeriesClassifier")
 		self.layer_1 = layer_1
 		self.layer_2 = layer_2
 		self.set_warm_start(warm_start)
