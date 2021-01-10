@@ -12,10 +12,10 @@ def create_random_state(seed=None):
 	Parameters
 	----------
 	seed : None or int or RandomState, default=None
-		Initial seed for the RandomState. If seed is None,
-		return the RandomState singleton. If seed is an int,
+		Initial seed for the RandomState. If `seed` is None,
+		return the RandomState singleton. If `seed` is an int,
 		return a RandomState with the seed set to the int.
-		If seed is a RandomState, return that RandomState.
+		If `seed` is a RandomState, return that RandomState.
 
 	Returns
 	-------
