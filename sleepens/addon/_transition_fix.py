@@ -29,29 +29,19 @@ class TransitionFix(AbstractAddon):
 	as determined by the transition matrix, is used to determine the new
 	state predictions.
 
+	It is recommended this be used as the final Addon to guarantee
+	state transitions.
+
 	Parameters
 	----------
-	transition_matrix : ndarray, shape=(n_classes, n_classes)
-		The matrix of possible transitions. Rows represent
-		timepoint `t` while columns represent `t+1`.
-		0 represents an invalid transition, while non-zero numbers
-		act as a multiplicative factor of the probability to
-		determine the most likely transition fix sequence.
-
 	verbose : int, default=0
 		Determines the verbosity of cross-validation.
 		Higher verbose levels result in more output logged.
 	"""
 	def __init__(self, transition_matrix=None, verbose=0):
 		AbstractAddon.__init__(self, verbose=verbose)
-		if transition_matrix is None:
-			self.transitions = np.array([	[1, 1, 1, 0],
-											[1, 1, 1, 0],
-											[1, 1, 1, 1],
-											[1, 1, 0, 2]])
-		else : self.transitions = transition_matrix
 
-	def addon(self, Y_hat, p):
+	def addon(self, Y_hat, p, transition_matrix=None):
 		"""
 		Post-process predictions.
 
@@ -65,22 +55,36 @@ class TransitionFix(AbstractAddon):
 			processing was done prior to this, `p`
 			corresponds with Y_hat.
 
+		transition_matrix : ndarray, None, shape=(n_classes, n_classes)
+			The matrix of possible transitions. Rows represent
+			timepoint `t` while columns represent `t+1`.
+			0 represents an invalid transition, while non-zero numbers
+			act as a multiplicative factor of the probability to
+			determine the most likely transition fix sequence.
+
 		Returns
 		-------
 		p : array-like, shape=(n_samples,)
 			The post-processed predictions.
 		"""
+		if transition_matrix is None:
+			transitions = np.array([	[1, 1, 1, 0],
+											[1, 1, 1, 0],
+											[1, 1, 1, 1],
+											[1, 1, 0, 2]])
+		else : transitions = transition_matrix
+
 		for i in range(len(p)-1):
-			if self.transitions[p[i], p[i+1]] == 0:
+			if transitions[p[i], p[i+1]] == 0:
 				k = i
 				p_forward, p_f = 0, deepcopy(p)
-				while k < len(p) and self.transitions[p_f[k], p_f[k+1]] == 0:
-					p_forward += np.max(Y_hat[k+1]*self.transitions[p_f[k]])
-					p_f[k+1] = np.argmax(Y_hat[k+1]*self.transitions[p_f[k]])
+				while k < len(p) and transitions[p_f[k], p_f[k+1]] == 0:
+					p_forward += np.max(Y_hat[k+1]*transitions[p_f[k]])
+					p_f[k+1] = np.argmax(Y_hat[k+1]*transitions[p_f[k]])
 					k += 1
 				k += 1
 				end = k
-				inverse = self.transitions.T
+				inverse = transitions.T
 				p_back, p_b = 0, deepcopy(p)
 				while k > 0 and (k >= i or inverse[p_b[k], p_b[k-1]] == 0):
 					p_back += np.max(Y_hat[k-1]*inverse[p_b[k]])
@@ -89,8 +93,8 @@ class TransitionFix(AbstractAddon):
 				start = k
 				k -= 1
 				while k < i:
-					p_forward += np.max(Y_hat[k+1]*self.transitions[p_f[k]])
-					p_f[k+1] = np.argmax(Y_hat[k+1]*self.transitions[p_f[k]])
+					p_forward += np.max(Y_hat[k+1]*transitions[p_f[k]])
+					p_f[k+1] = np.argmax(Y_hat[k+1]*transitions[p_f[k]])
 					k += 1
 				if p_forward >= p_back : p = p_f
 				else : p = p_b
