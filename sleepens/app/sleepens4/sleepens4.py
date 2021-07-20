@@ -9,7 +9,7 @@ from sleepens.app.sleepens4.processor import Sleepens4_Processor
 from sleepens.analysis import get_metrics
 from sleepens.ml import cross_validate
 from sleepens.ml.models import StackedTimeSeriesEnsemble, GradientBoostingClassifier, TimeSeriesEnsemble
-from sleepens.addon import TransitionFix
+from sleepens import addon
 
 
 class SleepEnsemble4(AbstractSleepEnsemble):
@@ -18,8 +18,7 @@ class SleepEnsemble4(AbstractSleepEnsemble):
 		self.name = "Sleepens4"
 		self.reader = smrMATReader(verbose=verbose)
 		self.processor = Sleepens4_Processor(params=params['process'], verbose=verbose)
-		gbc = GradientBoostingClassifier(n_estimators=250, max_features='sqrt', learning_rate=0.05,
-										subsample=0.75, max_depth=5)
+		gbc = GradientBoostingClassifier(**params['classifier']['gbc'])
 		tsens1 = TimeSeriesEnsemble(estimators=[deepcopy(gbc) for i in range(10)])
 		tsens2 = TimeSeriesEnsemble(estimators=[deepcopy(gbc) for i in range(10)])
 		self.classifier = StackedTimeSeriesEnsemble(layer_1=tsens1, layer_2=tsens2, warm_start=False,
@@ -84,4 +83,9 @@ class SleepEnsemble4(AbstractSleepEnsemble):
 
 	def _addon(self, Y_hat):
 		p = np.argmax(Y_hat, axis=1)
-		return RemFix(verbose=self.verbose).addon(Y_hat, p)
+		p = addon.WakeMax(verbose=self.verbose).addon(Y_hat, p)
+		p = addon.WakeToREM(verbose=self.verbsoe).addon(Y_hat, p)
+		p = addon.REMDrop(verbose=self.verbose).addon(Y_hat, p, window=3, threshold=0.1)
+		p = addon.MinREM(verbose=self.verbose).addon(Y_hat, p, min_rem=3)
+		p = addon.TransitionFix(verbose=self.verbose).addon(Y_hat, p)
+		return p

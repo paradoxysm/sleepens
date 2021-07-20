@@ -1,5 +1,4 @@
-from .app._base_sleepens import ShellSleepEnsemble as SleepEnsemble
+from .app import main
 
-__all__ = [
-			'SleepEnsemble'
-		]
+def run():
+	main()

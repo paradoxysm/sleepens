@@ -1,12 +1,10 @@
 import tkinter as tk
 from tkinter import filedialog
-import os
+import os, importlib, time, sys, struct
 import numpy as np
 from tqdm import trange
 from pathlib import Path
 from pprint import pprint
-import importlib
-import time
 
 from sleepens.io import Dataset
 from sleepens.app._base_sleepens import check_sleepens, ShellSleepEnsemble, AbstractSleepEnsemble
@@ -70,8 +68,13 @@ def ask_filenames(title="Choose Files", filetypes=[("Any File", "*")]):
 def save_file(title="Save File", defaultextension=".txt", filetypes=[("Any File", "*")]):
 	root = tk.Tk()
 	root.withdraw()
-	file = filedialog.asksaveasfilename(title=title,
-					defaultextension=defaultextension, filetypes=filetypes)
+	file = filedialog.asksaveasfilename(title=title, filetypes=filetypes)
+	version = "-py"
+	for i in range(3):
+		version += str(sys.version_info[i]) + "."
+	version += str(sys.hexversion) + "-"
+	file += version + sys.platform + "-" + str(struct.calcsize("P")*8) + "bit"
+	file += defaultextension
 	root.destroy()
 	return file
 
@@ -409,7 +412,6 @@ def update_params():
 
 def main():
 	print("Starting...")
-	#import model
 	model.set_verbose(verbose - 1)
 	while True:
 		time.sleep(0.5)

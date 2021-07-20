@@ -78,7 +78,7 @@ class TransitionFix(AbstractAddon):
 			if transitions[p[i], p[i+1]] == 0:
 				k = i
 				p_forward, p_f = 0, deepcopy(p)
-				while k < len(p) and transitions[p_f[k], p_f[k+1]] == 0:
+				while k < len(p)-1 and transitions[p_f[k], p_f[k+1]] == 0:
 					p_forward += np.max(Y_hat[k+1]*transitions[p_f[k]])
 					p_f[k+1] = np.argmax(Y_hat[k+1]*transitions[p_f[k]])
 					k += 1
@@ -86,6 +86,10 @@ class TransitionFix(AbstractAddon):
 				end = k
 				inverse = transitions.T
 				p_back, p_b = 0, deepcopy(p)
+				if k == len(p):
+					p_back += np.max(Y_hat[k-1])
+					p_b[k-1] = np.argmax(Y_hat[k-1])
+					k -= 1
 				while k > 0 and (k >= i or inverse[p_b[k], p_b[k-1]] == 0):
 					p_back += np.max(Y_hat[k-1]*inverse[p_b[k]])
 					p_b[k-1] = np.argmax(Y_hat[k-1]*inverse[p_b[k]])

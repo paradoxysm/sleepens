@@ -51,5 +51,14 @@ params = {
 		'EMG_TWITCH_MERGE': 'sum',
 		'EMG_ENTROPY_MERGE': 'mean',
 		'TRANSFORM': [{'FUNCTION':n.log_normalize, 'ARGS':['median', (-5, 5), 0]}]
+	},
+	'classifier': {
+		'gbc': {
+				'n_estimators': 250,
+				'max_features': 'sqrt',
+				'learning_rate': 0.05,
+				'subsample': 0.75,
+				'max_depth': 5
+			}
 	}
 }

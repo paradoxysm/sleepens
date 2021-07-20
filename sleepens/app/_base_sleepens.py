@@ -36,6 +36,11 @@ class AbstractSleepEnsemble(ABC):
 	def predict(self, X):
 		raise NotImplementedError("No predict function implemented")
 
+	@abstractmethod
+	def cross_validate(self, X, Y, cv=5, repeat=1, metric='accuracy', random_state=None,
+						shuffle=True):
+		raise NotImplementedError("No cross_validate function implemented")
+
 	def load(self, filepath):
 		if self.verbose > 0 : print("Loading", filepath)
 		sleepens = joblib.load(filepath)
@@ -54,12 +59,18 @@ class AbstractSleepEnsemble(ABC):
 
 	def set_verbose(self, verbose):
 		self.verbose = verbose
-		self.reader.verbose = verbose
-		self.processor.verbose = verbose
-		self.classifier.verbose = verbose
 
-	def _is_fitted(self):
-		return self.classifier._is_fitted()
+	def set_random_state(self, random_state):
+		TimeSeriesClassifier.set_random_state(self, random_state)
+
+	def set_metric(self, metric):
+		TimeSeriesClassifier.set_metric(self, metric)
+
+	def set_warm_start(self, warm_start):
+		TimeSeriesClassifier.set_warm_start(self, warm_start)
+
+	def _is_fitted(self, attributes=["n_classes_","n_features_"]):
+		return self.classifier._is_fitted(self, attributes=attributes)
 
 
 class ShellSleepEnsemble(AbstractSleepEnsemble):
@@ -77,4 +88,8 @@ class ShellSleepEnsemble(AbstractSleepEnsemble):
 		raise NotImplementedError("This is a shell class")
 
 	def predict(self, X):
+		raise NotImplementedError("This is a shell class")
+
+	def cross_validate(self, X, Y, cv=5, repeat=1, metric='accuracy', random_state=None,
+						shuffle=True):
 		raise NotImplementedError("This is a shell class")
