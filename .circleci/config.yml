@@ -35,24 +35,24 @@ commands:
 jobs:
   test35:
     docker:
-      - image: cimg/python3.5
+      - image: cimg/python:3.5
     steps:
       - test
 
   test36:
     docker:
-      - image: cimg/python3.6
+      - image: cimg/python:3.6
     steps:
       - test
 
   test37:
     docker:
-      - image: cimg/python3.7
+      - image: cimg/python:3.7
     steps:
       - test
 
   test38:
     docker:
-      - image: cimg/python3.8
+      - image: cimg/python:3.8
     steps:
       - test
