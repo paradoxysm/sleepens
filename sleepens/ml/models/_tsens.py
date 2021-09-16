@@ -38,18 +38,6 @@ class TimeSeriesEnsemble(TimeSeriesClassifier):
 		Determines warm starting to allow training to pick
 		up from previous training sessions.
 
-	metric : Metric, None, str, default='accuracy'
-		Metric to look up. Must be one of:
-		 - 'accuracy' : Accuracy.
-		 - 'precision' : Precision.
-		 - 'recall' : Recall.
-		 - 'f-score' : F1-Score.
-		 - 'roc-auc' : ROC-AUC.
-		 - Metric : A custom implementation.
-		 - None : Return None.
-		Custom Metrics must implement `score` which
-		by default should return a single float value.
-
 	random_state : None or int or RandomState, default=None
 		Initial seed for the RandomState. If `random_state` is None,
 		return the RandomState singleton. If `random_state` is an int,
@@ -69,15 +57,14 @@ class TimeSeriesEnsemble(TimeSeriesClassifier):
 		Number of features.
 	"""
 	def __init__(self, estimators=default_estimators,
-					warm_start=False, metric='accuracy', random_state=None, verbose=0):
-		TimeSeriesClassifier.__init__(self, warm_start=warm_start, metric=metric,
+					warm_start=False, random_state=None, verbose=0):
+		TimeSeriesClassifier.__init__(self, warm_start=warm_start,
 							random_state=random_state, verbose=verbose)
 		for e in estimators:
 			check_estimator(e)
 		self.n = len(estimators)
 		self.base_estimators = estimators
 		self.set_warm_start(warm_start)
-		self.set_metric(metric)
 		self.set_verbose(verbose)
 		self.set_random_state(random_state)
 
@@ -183,29 +170,6 @@ class TimeSeriesEnsemble(TimeSeriesClassifier):
 		estimators = self.estimators_ if hasattr(self, 'estimators_') else self.base_estimators
 		for e in estimators:
 			e.set_random_state(self.random_state.randint(0, 2**16))
-
-	def set_metric(self, metric):
-		"""
-		Set the metric of the Classifier.
-
-		Parameters
-		----------
-		metric : Metric, None, str
-			Metric to look up. Must be one of:
-			 - 'accuracy' : Accuracy.
-			 - 'precision' : Precision.
-			 - 'recall' : Recall.
-			 - 'f-score' : F1-Score.
-			 - 'roc-auc' : ROC-AUC.
-			 - Metric : A custom implementation.
-			 - None : Return None.
-			Custom Metrics must implement `score` which
-			by default should return a single float value.
-		"""
-		TimeSeriesClassifier.set_metric(self, metric)
-		estimators = self.estimators_ if hasattr(self, 'estimators_') else self.base_estimators
-		for e in estimators:
-			e.set_metric(metric)
 
 	def set_warm_start(self, warm_start):
 		"""

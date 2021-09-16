@@ -5,9 +5,9 @@
 
 import numpy as np
 
-from sleepens.process.epoch import epochify, get_epoch
 from sleepens.io import DataObject, Dataset
 from sleepens.utils.data import signal as s
+from sleepens.utils import calculate_epochs, get_epoch
 
 def percentile_mean(dataobject, epoch_size, name=None, k=50):
 	"""
@@ -33,7 +33,7 @@ def percentile_mean(dataobject, epoch_size, name=None, k=50):
 		Feature is named "<k> PERCENTILE MEAN"
 	"""
 	percentile_mean = []
-	epoch_len, n_epochs = epochify(dataobject.data, dataobject.resolution, epoch_size)
+	epoch_len, n_epochs = calculate_epochs(dataobject.data, dataobject.resolution, epoch_size)
 	for i in range(n_epochs):
 		epoch = get_epoch(dataobject.data, i, epoch_len)
 		percentile_mean.append(s.percentile_mean(epoch, k))

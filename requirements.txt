@@ -1,6 +1,7 @@
 numpy
-tqdm
 sklearn
+joblib
+tqdm
 xlrd
 xlwt
-joblib
+sonpy

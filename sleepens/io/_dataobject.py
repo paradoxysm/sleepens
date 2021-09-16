@@ -5,7 +5,7 @@
 
 import numpy as np
 
-class DataObject():
+class DataObject:
 	"""
 	DataObject is a container to store some signal data.
 
@@ -23,17 +23,21 @@ class DataObject():
 	length : int, default=-1
 		Number of samples in the signal data.
 
+	divide : int, default=-1
+		Number of clock ticks per sample.
+
 	Attributes
 	----------
 	indices : ndarray
 		Array of indices corresponding to the signal data.
 	"""
-	def __init__(self, name="", data=np.zeros(0), resolution=-1):
+	def __init__(self, name="", data=np.zeros(0), resolution=-1, divide=1):
 		self.name = name
 		self.data = data
 		self.indices = np.arange(len(data))
 		self.resolution = resolution
-		self.length = data.size
+		self.length = len(self.data)
+		self.divide = divide
 
 	def __str__(self):
 		return type(self).__name__ + ": " + self.name

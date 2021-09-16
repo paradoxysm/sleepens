@@ -22,11 +22,12 @@ setup(
     packages=find_packages(),
     install_requires=[
 		'numpy',
-		'tqdm',
 		'sklearn',
-        'xlrd',
-        'xlwt',
-		'joblib'
+		'joblib',
+		'tqdm',
+		'xlrd',
+		'xlwt',
+		'sonpy',
     ],
 	python_requires='>=3.5, <4',
 	classifiers=[

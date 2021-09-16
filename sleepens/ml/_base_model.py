@@ -5,12 +5,12 @@
 
 from abc import ABC, abstractmethod
 import numpy as np
+from tqdm import trange
 from copy import deepcopy
 from sklearn.utils.validation import check_is_fitted
+from sklearn import metrics
 
-from sleepens.analysis import get_metrics
 from sleepens.utils import create_random_state, check_XY, one_hot
-from sleepens.ml import get_loss
 
 def check_estimator(estimator):
 	"""
@@ -50,18 +50,6 @@ class Classifier(ABC):
 		Determines warm starting to allow training to pick
 		up from previous training sessions.
 
-	metric : Metric, None, str, default='accuracy'
-		Metric to look up. Must be one of:
-		 - 'accuracy' : Accuracy.
-		 - 'precision' : Precision.
-		 - 'recall' : Recall.
-		 - 'f-score' : F1-Score.
-		 - 'roc-auc' : ROC-AUC.
-		 - Metric : A custom implementation.
-		 - None : Return None.
-		Custom Metrics must implement `score` which
-		by default should return a single float value.
-
 	random_state : None or int or RandomState, default=None
 		Initial seed for the RandomState. If `random_state` is None,
 		return the RandomState singleton. If `random_state` is an int,
@@ -80,11 +68,9 @@ class Classifier(ABC):
 	n_features_ : int
 		Number of features.
 	"""
-	def __init__(self, warm_start=False, metric='accuracy',
+	def __init__(self, warm_start=False,
 				random_state=None, verbose=0):
 		self.warm_start = warm_start
-		if metric is None : metric = 'accuracy'
-		self.metric = get_metrics(metric)
 		self.random_state = create_random_state(random_state)
 		self.verbose = verbose
 
@@ -157,12 +143,12 @@ class Classifier(ABC):
 		"""
 		return np.log(self.predict_proba(X))
 
-	def feature_importance(self, X, Y, loss='mse', sort=True):
+	def feature_importance(self, X, Y, repeats=10, sort=True):
 		"""
 		Return the importances of features through Permutation
 		Feature Importance (PFI). In PFI, the fitted classifier
 		predicts over data where one feature has been permuted randomly.
-		The resulting change in score provides a measure of that feature's
+		The resulting change in mean square error provides a measure of that feature's
 		importance.
 
 		Take care when working with data that contains correlated features.
@@ -184,16 +170,9 @@ class Classifier(ABC):
 		Y : array-like, shape=(n_samples,)
 			Target labels as integers.
 
-		loss : LossFunction, str
-			LossFunction to look up. Must be one of:
-			 - 'mse' : Mean Squared Error.
-			 - 'mae' : Mean Absolute Error.
-			 - 'huber' : Huber Loss.
-			 - 'hinge' : Hinge Loss.
-			 - 'cross-entropy' : Crossentropy Loss.
-			 - LossFunction : A custom implementation.
-			Custom LossFunctions must implement `loss`, `gradient`
-			functions and contain `scale` attribute.
+		repeats : int, default=10
+			Number of times to repeat permutations. Importances
+			the average across repetitions.
 
 		sort : bool, default=True
 			Determine if the feature importances should be sorted.
@@ -208,29 +187,38 @@ class Classifier(ABC):
 		"""
 		if not self._is_fitted():
 			raise RuntimeError("Model has not been initialized")
-		if loss is None : raise ValueError("loss cannot be None")
-		loss = get_loss(loss)
 		X, Y = check_XY(X=X, Y=Y)
 		if self.verbose > 1 : print("Calculating feature importances")
 		Y_one_hot = one_hot(Y)
 		p = self.predict_proba(X)
-		error = np.exp(loss.loss(p, Y_one_hot))
-		importances = []
-		for f in range(X.shape[1]):
-			X_p = deepcopy(X)
-			self.random_state.shuffle(X_p[:,f])
-			p_ = self.predict_proba(X_p)
-			error_ = loss.loss(p_, Y_one_hot)
-			importances.append((f, np.exp(error_) / error))
+		error = np.mean(np.square(Y_one_hot - p))
+		importances = np.zeros((repeats, X_.shape[1]))
+		if self.verbose == 2 : trn = trange(repeats)
+		else : trn = range(repeats)
+		for n in trn:
+			if self.verbose == 3 : print("Repeat", n+1)
+			if self.verbose == 3 : trf = trange(X.shape[1])
+			else : trf = range(X.shape[1])
+			for f in trf:
+				if self.verbose > 3 : print("Permuting feature", f+1)
+				self.set_verbose(self.verbose - 3)
+				X_p = deepcopy(X)
+				self.random_state.shuffle(X_p[:,f])
+				p_ = self.predict_proba(X_p)
+				error_ = np.mean(np.square(Y_one_hot - p_))
+				importances[n, f] = (error_ / error)
+				self.set_verbose(self.verbose + 3)
+		mu = np.mean(importances, axis=0)
+		sigma = np.std(importances, axis=0)
+		importances = [(i, mu[i], sigma[i]) for i in range(X_.shape[1])]
 		if sort:
-			return sorted(importances, key=lambda x: x[1])
+			return sorted(importances, key=lambda x: x[1], reverse=True)
 		return importances
 
 	def score(self, Y_hat, Y):
 		"""
-		Calculate the score of the given predictions compared
-		to the target labels, as provided by the classifier's
-		`metric`.
+		Calculate the accuracy of the given predictions compared
+		to the target labels.
 
 		Parameters
 		----------
@@ -246,9 +234,7 @@ class Classifier(ABC):
 			The calculated score. If `metric` is None,
 			returns 0.
 		"""
-		if self.metric is not None:
-			return self.metric.score(Y_hat, Y)
-		return 0
+		return metrics.accuracy_score(Y, Y_hat)
 
 	def set_verbose(self, verbose):
 		"""
@@ -275,26 +261,6 @@ class Classifier(ABC):
 			If `random_state` is a RandomState, return that RandomState.
 		"""
 		self.random_state = create_random_state(random_state)
-
-	def set_metric(self, metric):
-		"""
-		Set the metric of the Classifier.
-
-		Parameters
-		----------
-		metric : Metric, None, str
-			Metric to look up. Must be one of:
-			 - 'accuracy' : Accuracy.
-			 - 'precision' : Precision.
-			 - 'recall' : Recall.
-			 - 'f-score' : F1-Score.
-			 - 'roc-auc' : ROC-AUC.
-			 - Metric : A custom implementation.
-			 - None : Return None.
-			Custom Metrics must implement `score` which
-			by default should return a single float value.
-		"""
-		self.metric = get_metrics(metric)
 
 	def set_warm_start(self, warm_start):
 		"""
@@ -421,18 +387,6 @@ class TimeSeriesClassifier(Classifier):
 		Determines warm starting to allow training to pick
 		up from previous training sessions.
 
-	metric : Metric, None, str, default='accuracy'
-		Metric to look up. Must be one of:
-		 - 'accuracy' : Accuracy.
-		 - 'precision' : Precision.
-		 - 'recall' : Recall.
-		 - 'f-score' : F1-Score.
-		 - 'roc-auc' : ROC-AUC.
-		 - Metric : A custom implementation.
-		 - None : Return None.
-		Custom Metrics must implement `score` which
-		by default should return a single float value.
-
 	random_state : None or int or RandomState, default=None
 		Initial seed for the RandomState. If `random_state` is None,
 		return the RandomState singleton. If `random_state` is an int,
@@ -451,10 +405,10 @@ class TimeSeriesClassifier(Classifier):
 	n_features_ : int
 		Number of features.
 	"""
-	def __init__(self, warm_start=False, metric='accuracy',
+	def __init__(self, warm_start=False,
 				random_state=None, verbose=0):
-		Classifier.__init__(self, warm_start=warm_start, metric=metric,
-							random_state=random_state, verbose=verbose)
+		Classifier.__init__(self, warm_start=warm_start,
+				random_state=random_state, verbose=verbose)
 
 	@abstractmethod
 	def fit(self, X, Y):
@@ -525,13 +479,13 @@ class TimeSeriesClassifier(Classifier):
 		"""
 		return [np.log(y) for y in self.predict_proba(X)]
 
-	def feature_importance(self, X, Y, loss='mse', sort=True):
+	def feature_importance(self, X, Y, repeats=10, sort=True):
 		"""
 		Return the importances of features through Permutation
 		Feature Importance (PFI). In PFI, the fitted classifier
 		predicts over data where one feature has been permuted randomly.
-		The resulting change in score provides a measure of that feature's
-		importance.
+		The resulting change in mean squared error provides a measure of
+		that feature's importance.
 
 		Take care when working with data that contains correlated features.
 		The results of PFI may not represent true feature importances in such cases,
@@ -552,16 +506,9 @@ class TimeSeriesClassifier(Classifier):
 		Y : list of ndarray, shape=(n_series, n_samples,)
 			Target labels as integers.
 
-		loss : LossFunction, str
-			LossFunction to look up. Must be one of:
-			 - 'mse' : Mean Squared Error.
-			 - 'mae' : Mean Absolute Error.
-			 - 'huber' : Huber Loss.
-			 - 'hinge' : Hinge Loss.
-			 - 'cross-entropy' : Crossentropy Loss.
-			 - LossFunction : A custom implementation.
-			Custom LossFunctions must implement `loss`, `gradient`
-			functions and contain `scale` attribute.
+		repeats : int, default=10
+			Number of times to repeat permutations. Importances
+			the average across repetitions.
 
 		sort : bool, default=True
 			Determine if the feature importances should be sorted.
@@ -576,32 +523,40 @@ class TimeSeriesClassifier(Classifier):
 		"""
 		if not self._is_fitted():
 			raise RuntimeError("Model has not been initialized")
-		if loss is None : raise ValueError("loss cannot be None")
-		loss = get_loss(loss)
 		for x, y in zip(X, Y) : check_XY(X=x, Y=y)
 		try : X_, Y_ = np.concatenate(X), np.concatenate(Y)
 		except : raise ValueError("Inputs have different number of features")
 		if self.verbose > 1 : print("Calculating feature importances")
 		Y_one_hot = np.concatenate([one_hot(y) for y in Y])
 		p = np.concatenate(self.predict_proba(X))
-		error = np.mean(np.exp(loss.loss(p, Y_one_hot)))
-		importances = []
-		for f in range(X_.shape[1]):
-			if self.verbose > 2 : print("Permuting feature", f+1)
-			X_p = [deepcopy(x) for x in X]
-			for x in X_p : self.random_state.shuffle(x[:,f])
-			p_ = np.concatenate(self.predict_proba(X_p))
-			error_ = np.mean(np.exp(loss.loss(p_, Y_one_hot)))
-			importances.append((f, error_ / error))
+		error = np.mean(np.square(Y_one_hot - p))
+		importances = np.zeros((repeats, X_.shape[1]))
+		if self.verbose == 2 : trn = trange(repeats)
+		else : trn = range(repeats)
+		for n in trn:
+			if self.verbose == 3 : print("Repeat", n+1)
+			if self.verbose == 3 : trf = trange(X_.shape[1])
+			else : trf = range(X_.shape[1])
+			for f in trf:
+				if self.verbose > 3 : print("Permuting feature", f+1)
+				self.set_verbose(self.verbose - 3)
+				X_p = [deepcopy(x) for x in X]
+				for x in X_p : self.random_state.shuffle(x[:,f])
+				p_ = np.concatenate(self.predict_proba(X_p))
+				error_ = np.mean(np.square(Y_one_hot - p_))
+				importances[n, f] = (error_ / error)
+				self.set_verbose(self.verbose + 3)
+		mu = np.mean(importances, axis=0)
+		sigma = np.std(importances, axis=0)
+		importances = [(i, mu[i], sigma[i]) for i in range(X_.shape[1])]
 		if sort:
-			return sorted(importances, key=lambda x: x[1])
+			return sorted(importances, key=lambda x: x[1], reverse=True)
 		return importances
 
 	def score(self, Y_hat, Y):
 		"""
-		Calculate the score of the given predictions compared
-		to the target labels, as provided by the classifier's
-		`metric`.
+		Calculate the accuracy of the given predictions compared
+		to the target labels.
 
 		Parameters
 		----------
@@ -617,11 +572,9 @@ class TimeSeriesClassifier(Classifier):
 			The calculated score. If `metric` is None,
 			returns 0.
 		"""
-		if self.metric is not None:
-			scores = [self.metric.score(y_hat, y) for y_hat, y in zip(Y_hat, Y)]
-			lengths = [len(y_hat) for y_hat in Y_hat]
-			return np.average(scores, weights=lengths)
-		return 0
+		scores = [metrics.accuracy_score(y, y_hat) for y_hat, y in zip(Y_hat, Y)]
+		lengths = [len(y_hat) for y_hat in Y_hat]
+		return np.average(scores, weights=lengths)
 
 	def _fit_setup(self, X, Y):
 		"""

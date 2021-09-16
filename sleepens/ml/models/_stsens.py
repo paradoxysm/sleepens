@@ -1,7 +1,6 @@
 import numpy as np
 from tqdm import trange
 
-from sleepens.analysis import get_metrics
 from sleepens.ml import cross_validate
 from sleepens.ml._base_model import TimeSeriesClassifier
 from sleepens.ml.models import TimeSeriesEnsemble
@@ -23,18 +22,6 @@ class StackedTimeSeriesEnsemble(TimeSeriesClassifier):
 		Determines warm starting to allow training to pick
 		up from previous training sessions.
 
-	metric : Metric, None, str, default='accuracy'
-		Metric to look up. Must be one of:
-		 - 'accuracy' : Accuracy.
-		 - 'precision' : Precision.
-		 - 'recall' : Recall.
-		 - 'f-score' : F1-Score.
-		 - 'roc-auc' : ROC-AUC.
-		 - Metric : A custom implementation.
-		 - None : Return None.
-		Custom Metrics must implement `score` which
-		by default should return a single float value.
-
 	random_state : None or int or RandomState, default=None
 		Initial seed for the RandomState. If `random_state` is None,
 		return the RandomState singleton. If `random_state` is an int,
@@ -54,8 +41,8 @@ class StackedTimeSeriesEnsemble(TimeSeriesClassifier):
 		Number of features.
 	"""
 	def __init__(self, layer_1=TimeSeriesEnsemble(), layer_2=TimeSeriesEnsemble(),
-					warm_start=False, metric='accuracy', random_state=None, verbose=0):
-		TimeSeriesClassifier.__init__(self, warm_start=warm_start, metric=metric,
+					warm_start=False, random_state=None, verbose=0):
+		TimeSeriesClassifier.__init__(self, warm_start=warm_start,
 							random_state=random_state, verbose=verbose)
 		if not issubclass(type(layer_1), TimeSeriesClassifier):
 			raise ValueError("Layer 1 must be a TimeSeriesClassifier")
@@ -64,7 +51,6 @@ class StackedTimeSeriesEnsemble(TimeSeriesClassifier):
 		self.layer_1 = layer_1
 		self.layer_2 = layer_2
 		self.set_warm_start(warm_start)
-		self.set_metric(metric)
 		self.set_verbose(verbose)
 		self.set_random_state(random_state)
 
@@ -156,28 +142,6 @@ class StackedTimeSeriesEnsemble(TimeSeriesClassifier):
 		TimeSeriesClassifier.set_random_state(self, random_state)
 		for e in (self.layer_1, self.layer_2):
 			e.set_random_state(self.random_state.randint(0, 2**16))
-
-	def set_metric(self, metric):
-		"""
-		Set the metric of the Classifier.
-
-		Parameters
-		----------
-		metric : Metric, None, str
-			Metric to look up. Must be one of:
-			 - 'accuracy' : Accuracy.
-			 - 'precision' : Precision.
-			 - 'recall' : Recall.
-			 - 'f-score' : F1-Score.
-			 - 'roc-auc' : ROC-AUC.
-			 - Metric : A custom implementation.
-			 - None : Return None.
-			Custom Metrics must implement `score` which
-			by default should return a single float value.
-		"""
-		TimeSeriesClassifier.set_metric(self, metric)
-		for e in (self.layer_1, self.layer_2):
-			e.set_metric(metric)
 
 	def set_warm_start(self, warm_start):
 		"""

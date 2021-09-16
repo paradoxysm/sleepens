@@ -5,9 +5,9 @@
 
 import numpy as np
 
-from sleepens.process.epoch import epochify, get_epoch
 from sleepens.io import DataObject, Dataset
 from sleepens.utils.data import signal as s
+from sleepens.utils import calculate_epochs, get_epoch
 
 def fft(dataobject, epoch_size, name=None, nperseg_factor=1,
 				noverlap_factor=0.1, detrend='constant'):
@@ -42,7 +42,7 @@ def fft(dataobject, epoch_size, name=None, nperseg_factor=1,
 		and power spectral densities at each epoch.
 	"""
 	f, Pxx = [], []
-	epoch_len, n_epochs = epochify(dataobject.data, dataobject.resolution, epoch_size)
+	epoch_len, n_epochs = calculate_epochs(dataobject.data, dataobject.resolution, epoch_size)
 	for i in range(n_epochs):
 		epoch = get_epoch(dataobject.data, i, epoch_len)
 		fs = 1/dataobject.resolution

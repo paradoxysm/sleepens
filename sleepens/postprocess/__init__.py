@@ -1,3 +1,5 @@
+default_map = { 'AW': 0, 'QW': 1, 'NR': 2, 'R': 3 }
+
 from ._min_rem import MinREM
 from ._rem_drop import REMDrop
 from ._rem_sensitivity import REMSensitivity

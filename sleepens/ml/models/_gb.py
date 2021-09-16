@@ -223,9 +223,8 @@ class GradientBoostingClassifier(Classifier):
 				min_impurity_decrease=0.0, min_impurity_split=None, init=None,
 				random_state=None, max_features=None, verbose=0, max_leaf_nodes=None,
 				warm_start=False, validation_fraction=0.1, n_iter_no_change=None,
-				tol=0.0001, ccp_alpha=0.0, metric='accuracy'):
-		Classifier.__init__(self, warm_start=warm_start, metric=metric,
-							random_state=random_state, verbose=verbose)
+				tol=0.0001, ccp_alpha=0.0):
+		Classifier.__init__(self, warm_start=warm_start, random_state=random_state, verbose=verbose)
 		self.gb = gbm(loss=loss, learning_rate=learning_rate, n_estimators=n_estimators,
 					subsample=subsample, criterion=criterion, min_samples_split=min_samples_split,
 					min_samples_leaf=min_samples_leaf, min_weight_fraction_leaf=min_weight_fraction_leaf,

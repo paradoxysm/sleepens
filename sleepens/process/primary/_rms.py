@@ -5,9 +5,9 @@
 
 import numpy as np
 
-from sleepens.process.epoch import epochify, get_epoch
 from sleepens.io import DataObject, Dataset
 from sleepens.utils.data import signal as s
+from sleepens.utils import calculate_epochs, get_epoch
 
 def rms(dataobject, epoch_size, name=None):
 	"""
@@ -30,7 +30,7 @@ def rms(dataobject, epoch_size, name=None):
 		Feature is named "RMS"
 	"""
 	rms = []
-	epoch_len, n_epochs = epochify(dataobject.data, dataobject.resolution, epoch_size)
+	epoch_len, n_epochs = calculate_epochs(dataobject.data, dataobject.resolution, epoch_size)
 	for i in range(n_epochs):
 		epoch = get_epoch(dataobject.data, i, epoch_len)
 		rms.append(s.rms(epoch))

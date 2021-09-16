@@ -5,10 +5,9 @@
 
 import numpy as np
 
-from sleepens.process.epoch import epochify, get_epoch
 from sleepens.io import DataObject, Dataset
 from sleepens.utils.data import signal as s
-from sleepens.utils import aggregate, determine_threshold
+from sleepens.utils import aggregate, determine_threshold, calculate_epochs, get_epoch
 
 def epoched_variance(dataobject, epoch_size, name=None, sub_epoch_size=10,
 				threshold='median', merge='sum'):
@@ -54,7 +53,7 @@ def epoched_variance(dataobject, epoch_size, name=None, sub_epoch_size=10,
 		Feature is named "EPOCHED VARIANCE"
 	"""
 	activities = []
-	epoch_len, n_epochs = epochify(dataobject.data, dataobject.resolution, epoch_size)
+	epoch_len, n_epochs = calculate_epochs(dataobject.data, dataobject.resolution, epoch_size)
 	for i in range(n_epochs):
 		epoch = get_epoch(dataobject.data, i, epoch_len)
 		subepoch_var = []

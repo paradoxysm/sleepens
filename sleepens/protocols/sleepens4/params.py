@@ -14,7 +14,8 @@ params = {
 		'NECK_NAME': 'NECK',
 		'MASS_NAME': 'MASS',
 		'SCORE_NAME': 'SCORE',
-		'SCORE_MAP': { 'AW': 0, 'QW': 1, 'NR': 2, 'R': 3 },
+		'SCORE_MAP': { 0: 'AW', 1: 'QW', 2: 'NR', 3: 'R' },
+		'INVERSE_MAP': { 'AW': 0, 'QW': 1, 'NR': 2, 'R': 3 },
 		'EEG_FFT': {
 						'NPERSEG': 0.75,
 						'NOVERLAP': 0.5,
@@ -60,5 +61,9 @@ params = {
 				'subsample': 0.75,
 				'max_depth': 5
 			}
-	}
+	},
+	'transition': [[1, 1, 1, 0],
+					[1, 1, 1, 0],
+					[1, 1, 1, 1],
+					[1, 1, 0, 2]]
 }

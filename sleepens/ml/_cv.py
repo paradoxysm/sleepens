@@ -5,14 +5,14 @@
 
 import numpy as np
 from tqdm import trange
+from sklearn import metrics
 from sklearn.utils import shuffle as sk_shuffle
 from copy import deepcopy
 
-from sleepens.analysis import get_metrics
 from sleepens.utils import create_random_state, check_XY
 from sleepens.ml import check_estimator, check_timeseries_estimator
 
-def cross_validate(estimator, X, Y, cv=5, repeat=1, metric='accuracy', random_state=None,
+def cross_validate(estimator, X, Y, cv=5, repeat=1, random_state=None,
 					shuffle=True, verbose=0):
 	"""
 	Conduct a k-fold cross validation.
@@ -39,18 +39,6 @@ def cross_validate(estimator, X, Y, cv=5, repeat=1, metric='accuracy', random_st
 		Number of times to repeat cross-validation to average
 		the results.
 
-	metric : Metric, None, str, default='accuracy'
-		Metric to look up. Must be one of:
-		 - 'accuracy' : Accuracy.
-		 - 'precision' : Precision.
-		 - 'recall' : Recall.
-		 - 'f-score' : F1-Score.
-		 - 'roc-auc' : ROC-AUC.
-		 - Metric : A custom implementation.
-		 - None : Return None.
-		Custom Metrics must implement `score` which
-		by default should return a single float value.
-
 	random_state : None or int or RandomState, default=None
 		Initial seed for the RandomState. If `random_state` is None,
 		return the RandomState singleton. If `random_state` is an int,
@@ -75,8 +63,6 @@ def cross_validate(estimator, X, Y, cv=5, repeat=1, metric='accuracy', random_st
 		If using a TimeSeriesClassifier, `Y_hat` is a list of ndarrays with
 		a shape of (n_series, n_samples, n_classes)
 	"""
-	if metric is None : metric = 'accuracy'
-	metric = get_metrics(metric)
 	random_state = create_random_state(random_state)
 	check_estimator(estimator)
 	if len(X) < cv:
@@ -86,12 +72,12 @@ def cross_validate(estimator, X, Y, cv=5, repeat=1, metric='accuracy', random_st
 	if verbose > 0 : print("Cross-validation with", cv, "folds", "and", repeat, "repeats")
 	try:
 		check_timeseries_estimator(estimator)
-	except : return _cross_validate_classic(estimator, X, Y, cv, repeat, metric,
+	except : return _cross_validate_classic(estimator, X, Y, cv, repeat,
 				random_state, shuffle, verbose)
-	else : return _cross_validate_timeseries(estimator, X, Y, cv, repeat, metric,
+	else : return _cross_validate_timeseries(estimator, X, Y, cv, repeat,
 				random_state, shuffle, verbose)
 
-def _cross_validate_classic(estimator, X, Y, cv, repeat, metric, random_state,
+def _cross_validate_classic(estimator, X, Y, cv, repeat, random_state,
 					shuffle, verbose):
 	"""
 	Conduct a k-fold cross validation on a Classifier.
@@ -113,9 +99,6 @@ def _cross_validate_classic(estimator, X, Y, cv, repeat, metric, random_state,
 	repeat : int
 		Number of times to repeat cross-validation to average
 		the results.
-
-	metric : Metric
-		Metric to use for scoring.
 
 	random_state : RandomState
 		RandomState for shuffling.
@@ -160,7 +143,7 @@ def _cross_validate_classic(estimator, X, Y, cv, repeat, metric, random_state,
 			if verbose > 1 : print("Predicting for fold", f+1)
 			Y_hat_ = e.predict_proba(X_folds[-1])
 			if verbose > 2:
-				score_ = metric.score(np.argmax(Y_hat_, axis=1), Y_folds[-1])
+				score_ = metrics.accuracy_score(Y_folds[-1], np.argmax(Y_hat_, axis=1))
 				print("Score:", score_)
 			Y_hat[i_folds[-1].astype(int)] += Y_hat_ / repeat
 			X_folds = X_folds[-1:] + X_folds[:-1]
@@ -168,9 +151,9 @@ def _cross_validate_classic(estimator, X, Y, cv, repeat, metric, random_state,
 			i_folds = i_folds[-1:] + i_folds[:-1]
 	estimator.set_verbose(e_verbose)
 	p = np.argmax(Y_hat, axis=1)
-	return metric.score(p, Y), Y_hat
+	return metrics.accuracy_score(Y, p), Y_hat
 
-def _cross_validate_timeseries(estimator, X, Y, cv, repeat, metric, random_state,
+def _cross_validate_timeseries(estimator, X, Y, cv, repeat, random_state,
 					shuffle, verbose):
 	"""
 	Conduct a k-fold cross validation on a TimeSeriesClassifier.
@@ -192,9 +175,6 @@ def _cross_validate_timeseries(estimator, X, Y, cv, repeat, metric, random_state
 	repeat : int
 		Number of times to repeat cross-validation to average
 		the results.
-
-	metric : Metric
-		Metric to use for scoring.
 
 	random_state : RandomState
 		RandomState for shuffling.
@@ -243,8 +223,7 @@ def _cross_validate_timeseries(estimator, X, Y, cv, repeat, metric, random_state
 			if verbose > 2:
 				scores_, lens_ = [], [len(y_f) for y_f in Y_folds[-1]]
 				for y_hat, y in zip(Y_hat_, Y_folds[-1]):
-					p = np.argmax(y_hat, axis=1)
-					scores_.append(metric.score(p, y))
+					scores_.append(metrics.accuracy_score(y, np.argmax(y_hat, axis=1)))
 				score_ = np.average(scores_, weights=lens_)
 				print("Score:", score_)
 			for i in range(len(Y_hat_)):
@@ -255,7 +234,6 @@ def _cross_validate_timeseries(estimator, X, Y, cv, repeat, metric, random_state
 	estimator.set_verbose(e_verbose)
 	scores = []
 	for y_hat, y in zip(Y_hat, Y):
-		p = np.argmax(y_hat, axis=1)
-		scores.append(metric.score(p, y))
+		scores.append(metrics.accuracy_score(y, np.argmax(y_hat, axis=1)))
 	score = np.average(scores, weights=lens)
 	return score, Y_hat
