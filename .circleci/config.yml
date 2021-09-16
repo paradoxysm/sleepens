@@ -2,7 +2,6 @@ version: 2.1
 
 orbs:
   python: circleci/python@1.4.0
-  codecov: codecov/codecov@3.1.0
 
 workflows:
   buildtest:
@@ -13,12 +12,8 @@ workflows:
       - test-3.8
       - codecov/upload
 
-jobs:
-  .test-template:
-    environment:
-      - PYTHON_EXE: python
-    docker:
-      - image: cimg/python
+commands:
+  test:
     steps:
       - checkout
       - python/install-packages:
@@ -38,22 +33,27 @@ jobs:
           name: Codecov
           command: codecov
 
+jobs:
   test-3.5:
-    <<: *test-template
     docker:
       - image: cimg/python3.5
+    steps:
+      - test
 
   test-3.6:
-    <<: *test-template
     docker:
       - image: cimg/python3.6
+    steps:
+      - test
 
   test-3.7:
-    <<: *test-template
     docker:
       - image: cimg/python3.7
+    steps:
+      - test
 
   test-3.8:
-    <<: *test-template
     docker:
       - image: cimg/python3.8
+    steps:
+      - test
