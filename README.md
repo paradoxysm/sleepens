@@ -1,6 +1,6 @@
 ## Sleep Ensemble
 
-[![Travis](https://flat.badgen.net/travis/paradoxysm/sleepens?label=build&kill_cache=1)](https://travis-ci.com/paradoxysm/sleepens)
+[![Travis](https://flat.badgen.net/travis/paradoxysm/sleepens?label=build&kill_cache=1)](https://app.travis-ci.com/github/paradoxysm/sleepens)
 [![Codecov](https://flat.badgen.net/codecov/c/github/paradoxysm/sleepens?label=coverage&kill_cache=1)](https://codecov.io/gh/paradoxysm/sleepens)
 [![GitHub](https://flat.badgen.net/github/license/paradoxysm/sleepens)](https://github.com/paradoxysm/sleepens/blob/master/LICENSE)
 
@@ -11,7 +11,8 @@ Sleep Ensemble is built upon a novel ensemble architecture, the Time Series Ense
 ## Installation
 
 Install a suitable python environment from [python.org](https://www.python.org/downloads/release/python-378/).
-> Sleep Ensemble is extensively tested and developed in Python 3.7.8 on Windows 10. The included pre-trained SleepEnsemble4 build is thus only useable on a 64bit Python version (specifically Python 3.7.x). Its use may be possible with other Python 3.x versions but not guaranteed. You can train your own build on any of the supported Python environments, namely 3.5 through to 3.8.
+> Sleep Ensemble supports Python 3.7 or later.
+> Sleep Ensemble is extensively tested and developed in Python 3.7.8 on Windows 10. The included pre-trained SleepEnsemble4 build is thus only useable on a 64bit Python version (specifically Python 3.7.x) on Windows. Its use may be possible with other Python 3.x versions but not guaranteed. You can train your own build on any of the supported Python environments in any OS.
 
 Download the latest `sleepens` release [here](https://github.com/paradoxysm/sleepens/releases). Unzip into desired location.
 

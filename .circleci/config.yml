@@ -6,10 +6,9 @@ orbs:
 workflows:
   buildtest:
     jobs:
-      - test35
-      - test36
       - test37
       - test38
+      - test39
 
 commands:
   test:
@@ -21,6 +20,7 @@ commands:
           name: Install pytest
           command: |
             python --version
+            pip install --upgrade pip
             pip install pytest
             pip install coverage
             pip install pytest-cov
@@ -33,18 +33,6 @@ commands:
           command: codecov
 
 jobs:
-  test35:
-    docker:
-      - image: cimg/python:3.5
-    steps:
-      - test
-
-  test36:
-    docker:
-      - image: cimg/python:3.6
-    steps:
-      - test
-
   test37:
     docker:
       - image: cimg/python:3.7
@@ -54,5 +42,11 @@ jobs:
   test38:
     docker:
       - image: cimg/python:3.8
+    steps:
+      - test
+
+  test39:
+    docker:
+      - image: cimg/python:3.9
     steps:
       - test
