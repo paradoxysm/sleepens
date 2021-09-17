@@ -12,6 +12,7 @@ Sleep Ensemble is built upon a novel ensemble architecture, the Time Series Ense
 
 Install a suitable python environment from [python.org](https://www.python.org/downloads/release/python-378/).
 > Sleep Ensemble supports Python 3.7 or later. It is extensively tested and developed with 64-bit Python 3.7.8 on Windows.
+
 > Sleep Ensemble pre-trained builds are only useable for the specific OS and 32/64-bit Python environment. Its use may be possible with other Python 3.x versions but not guaranteed. The included pre-trained SleepEnsemble4 is built on 64-bit Python 3.7.8 on Windows.
 
 Download the latest `sleepens` release [here](https://github.com/paradoxysm/sleepens/releases). Unzip into desired location.
