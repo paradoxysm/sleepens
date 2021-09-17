@@ -6,8 +6,6 @@
 
 Sleep Ensemble is a framework for end-to-end sleep state classification using machine learning. It is designed to allow for modular data processing, classification, and further post-processing.
 
-Sleep Ensemble is built upon a novel ensemble architecture, the Time Series Ensemble, which provides greater performance and generalizability on sleep time series data over other models (e.g. gradient boosting, random forests, neural networks, etc.).
-
 ## Installation
 
 Install a suitable python environment from [python.org](https://www.python.org/downloads/release/python-378/).
@@ -70,6 +68,10 @@ See the [changelog](https://github.com/paradoxysm/sleepens/blob/master/CHANGES.m
 [![Code Climate maintainability](https://img.shields.io/codeclimate/maintainability-percentage/paradoxysm/sleepens?style=flat-square&kill_cache=1)](https://codeclimate.com/github/paradoxysm/sleepens/maintainability)
 
 `sleepens` is in a relatively finished state. It has not been tested on different Python environment and OS combinations.
+
+Currently, `sleepens` supports .mat, .smr/.smrx, .xls file formats for reading and writing. Additional i/o interfaces can be contributed to `sleepens.io.interfaces` following the basic structure.
+
+`sleepens` currently contains one protocol, SleepEnsemble4, for 4-state sleep classification. New or modified protocols can be contributed to `sleepens.protocols` following the basic structure.
 
 ## Help and Support
 
