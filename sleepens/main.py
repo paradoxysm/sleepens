@@ -11,6 +11,7 @@ from sleepens.ml import cross_validate
 from sleepens.analysis import confusion_matrix, classification_report
 from sleepens.io.interfaces import interfaces
 
+from sleepens.protocols import protocols
 from sleepens.protocols.sleepens4 import SleepEnsemble4
 
 version = "0.1.0"
@@ -124,23 +125,24 @@ def print_report(Y_hat, Y):
 
 def change_protocol():
 	global model, verbose
-	file = ask_filename(title="Choose Model Class File",
-					filetypes=[("Python files", "*.py")])
-	if not file:
-		print("You didn't select a file! Returning you to the main menu")
-		return
-	print("Selected", Path(file).stem)
-	confirm = yes_no_loop("Are you sure? Only load .py files from trusted sources")
-	if not confirm:
-		print("Cancelling import. Returning you to the main menu")
-		return
-	name = input("Enter the exact name of the class to import from the .py file: ")
-	mod = getattr(import_module(name, file), name)
-	mod = mod(verbose=model.verbose)
-	print("Found the following:", mod.name)
-	finalize = yes_no_loop("Confirm use?")
-	if finalize:
-		model = mod
+	while True:
+		print("-"*30)
+		print("Select Sleep Ensemble Protocol")
+		print("-"*30)
+		for i in range(len(protocols)):
+			print(str(i+1)+".", protocols[i].__name__)
+		print("Q. Return to main menu")
+		print("-"*30)
+		usr = input("Select protocol: ").upper()
+		if usr.isdigit():
+			usr = int(usr)
+			if usr > 0 and usr <= len(protocols):
+				protocol = protocols[usr-1]
+				print("Changed protocol to", protocol.__name__)
+				return protocol
+			else : print("Sorry, didn't quite catch that.")
+		elif usr == "Q": return
+		else : print("Sorry, didn't quite catch that.")
 
 def read_data(in_int, filepath, labels=False):
 	global model, verbose

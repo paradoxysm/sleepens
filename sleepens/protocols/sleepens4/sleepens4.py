@@ -8,10 +8,9 @@ from sleepens.ml import cross_validate
 from sleepens.ml.models import StackedTimeSeriesEnsemble, GradientBoostingClassifier, TimeSeriesEnsemble
 from sleepens import postprocess
 
-
 class SleepEnsemble4:
 	def __init__(self, params=params, verbose=0):
-		self.name = "Sleepens4"
+		self.name = "SleepEnsemble4"
 		self.params = params
 		self.verbose = verbose
 		gbc = GradientBoostingClassifier(**params['classifier']['gbc'])
