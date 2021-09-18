@@ -353,7 +353,12 @@ def load():
 	print("Load Model")
 	print("Current model:", model.name)
 	print("-"*30)
-	change_protocol()
+	protocol = change_protocol()
+	if not protocol:
+		print("You didn't select a protocol. Returning you to the main menu")
+		return
+	print("Selected", protocol.__name__, "protocol")
+	model = protocol(verbose=model.verbose)
 	file = ask_filename(title="Choose Model File", filetypes=[("Joblib", "*.joblib")])
 	if not file:
 		print("You didn't select a file! Returning you to the main menu")
@@ -363,8 +368,7 @@ def load():
 	if not confirm:
 		print("Cancelling import. Returning you to the main menu")
 		return
-	model = joblib.load(file)
-	model.set_verbose(verbose - 1)
+	model.classifier = joblib.load(file)
 	print("Loaded", model.name)
 
 def export():
@@ -382,7 +386,7 @@ def export():
 		print("Cancelling save. Returning you to the main menu")
 		return
 	print("Exporting", model.name, "to", Path(file).stem)
-	joblib.dump(model, file)
+	joblib.dump(model.classifier, file)
 	print("Exported", model.name, "to", Path(file).stem)
 
 def select_interface(tags={'r', 'w'}):
