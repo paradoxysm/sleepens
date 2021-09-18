@@ -14,14 +14,17 @@ Install a suitable python environment from [python.org](https://www.python.org/d
 > Sleep Ensemble supports Python 3.7 or later.
 > Sleep Ensemble is extensively tested and developed in Python 3.7.8 on Windows 10. The included pre-trained SleepEnsemble4 build is thus only useable on a 64bit Python version (specifically Python 3.7.x) on Windows. Its use may be possible with other Python 3.x versions but not guaranteed. You can train your own build on any of the supported Python environments in any OS.
 
-Download the latest `sleepens` release [here](https://github.com/paradoxysm/sleepens/releases). Unzip into desired location.
-
-Using a terminal like command prompt, navigate to the top `sleepens` folder where `setup.py` is located.
-Run the following:
+Install the latest `sleepens` release using `pip` (on a terminal like command prompt):
+```
+pip install sleepens
+```
+Alternatively, download the source code for the latest release [here](https://github.com/paradoxysm/sleepens/releases). Unzip into desired location. Using the terminal, navigate to the top `sleepens` folder where `setup.py` is located and run the following:
 ```
 python setup.py install
 ```
 > Your installation of Python may require you to use the alias python3 to run python scripts.
+
+Download any pre-trained builds [here](https://github.com/paradoxysm/sleepens/releases) or train your own.
 
 ## Usage
 
@@ -30,6 +33,12 @@ Sleep Ensemble is built for easy use with a text-based python script that you ca
 The application runs via `sleepens.py` which can be copied/moved anywhere as needed. To run, using the terminal, navigate to `sleepens.py` and run:
 ```
 python sleepens.py
+```
+
+As a framework, the Sleep Ensemble package can be used as you would any other package. The end-user program can be accessed:
+```python
+import sleepens
+sleepens.run()
 ```
 
 Alongside the Sleep Ensemble application, the framework is designed for high modularity and integration with other scripts in very little code.
@@ -47,18 +56,6 @@ predictions = model.predict(data)
 The underlying data processing pipelines and classification models are modular and can be adjusted to create different sleep ensemble models. These pipelines can be contributed to `sleepens.protocols`
 
 For full details on usage, see the [documentation](https://github.com/paradoxysm/sleepens/tree/master/doc).
-
-### For Development
-
-Since the release package is the source code, you can also develop the package in this manner. You may also install `sleepens` using `pip`:
-```
-pip install sleepens
-```
-As a framework, the Sleep Ensemble package can be used as you would any other package. The end-user program can be accessed:
-```python
-import sleepens
-sleepens.run()
-```
 
 ## Changelog
 
