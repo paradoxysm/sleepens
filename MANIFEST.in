@@ -1,3 +1,4 @@
 include *.md
 include LICENSE
 recursive-include doc *
+recursive-exclude builds *
