@@ -23,7 +23,7 @@ python setup.py install
 ```
 > Your installation of Python may require you to use the alias python3 to run python scripts.
 
-Download any pre-trained builds [here](https://github.com/paradoxysm/sleepens/releases) or train your own.
+Download any pre-trained builds [here](https://github.com/paradoxysm/sleepens/blob/master/BUILDS.md) or train your own.
 
 ## Usage
 
