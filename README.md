@@ -6,13 +6,12 @@
 
 Sleep Ensemble is a framework for end-to-end sleep state classification using machine learning. It is designed to allow for modular data processing, classification, and further post-processing.
 
-Sleep Ensemble is built upon a novel ensemble architecture, the Time Series Ensemble, which provides greater performance and generalizability on sleep time series data over other models (e.g. gradient boosting, random forests, neural networks, etc.).
-
 ## Installation
 
 Install a suitable python environment from [python.org](https://www.python.org/downloads/release/python-378/).
-> Sleep Ensemble supports Python 3.7 or later.
-> Sleep Ensemble is extensively tested and developed in Python 3.7.8 on Windows 10. The included pre-trained SleepEnsemble4 build is thus only useable on a 64bit Python version (specifically Python 3.7.x) on Windows. Its use may be possible with other Python 3.x versions but not guaranteed. You can train your own build on any of the supported Python environments in any OS.
+> Sleep Ensemble supports Python 3.7 or later. It is extensively tested and developed with 64-bit Python 3.7.8 on Windows.
+
+> Sleep Ensemble pre-trained builds are only useable for the specific OS and 32/64-bit Python environment. Its use may be possible with other Python 3.x versions but not guaranteed. The included pre-trained SleepEnsemble4 is built on 64-bit Python 3.7.8 on Windows.
 
 Install the latest `sleepens` release using `pip` (on a terminal like command prompt):
 ```
@@ -66,6 +65,10 @@ See the [changelog](https://github.com/paradoxysm/sleepens/blob/master/CHANGES.m
 [![Code Climate maintainability](https://img.shields.io/codeclimate/maintainability-percentage/paradoxysm/sleepens?style=flat-square&kill_cache=1)](https://codeclimate.com/github/paradoxysm/sleepens/maintainability)
 
 `sleepens` is in a relatively finished state. It has not been tested on different Python environment and OS combinations.
+
+Currently, `sleepens` supports .mat, .smr/.smrx, .xls file formats for reading and writing. Additional i/o interfaces can be contributed to `sleepens.io.interfaces` following the basic structure.
+
+`sleepens` currently contains one protocol, SleepEnsemble4, for 4-state sleep classification. New or modified protocols can be contributed to `sleepens.protocols` following the basic structure.
 
 ## Help and Support
 
