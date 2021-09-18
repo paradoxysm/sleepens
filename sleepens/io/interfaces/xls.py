@@ -117,7 +117,10 @@ def write(filepath, dataset):
 	header = header.reshape(1, len(header))
 	if len(dataset.labels) > 0:
 		labels = dataset.labels.reshape(-1,len(dataset.label_names))
-		contents = np.concatenate((dataset.data, labels), axis=1)
+		if len(dataset.data) > 0:
+			contents = np.concatenate((dataset.data, labels), axis=1)
+		else:
+			contents = labels
 	else:
 		contents = dataset.data
 	if header.shape[1] != contents.shape[1]:
