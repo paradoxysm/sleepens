@@ -386,7 +386,7 @@ def export():
 		print("Cancelling save. Returning you to the main menu")
 		return
 	print("Exporting", model.name, "to", Path(file).stem)
-	joblib.dump(model.classifier, file)
+	joblib.dump(model.classifier, file, compress=5)
 	print("Exported", model.name, "to", Path(file).stem)
 
 def select_interface(tags={'r', 'w'}):
