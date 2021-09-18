@@ -68,6 +68,8 @@ Currently, `sleepens` supports .mat, .smr/.smrx, .xls file formats for reading a
 
 The underlying data processing pipelines and classification models are modular and can be adjusted to create different sleep ensemble models. `sleepens` currently contains one protocol, SleepEnsemble4, for 4-state sleep classification. New or modified protocols can be contributed to `sleepens.protocols` following the basic structure.
 
+Finally, `sleepens` uses `joblib` to store the pre-trained builds. This isn't the most secure method nor is the most data storage efficient. Ideally, a custom parameter export/load method is implemented that can reinstate a pre-trained build.
+
 ## Help and Support
 
 ### Documentation
