@@ -70,6 +70,18 @@ The underlying data processing pipelines and classification models are modular a
 
 Finally, `sleepens` uses `joblib` to store the pre-trained builds. This isn't the most secure method nor is the most data storage efficient. Ideally, a custom parameter export/load method is implemented that can reinstate a pre-trained build.
 
+## Dependencies
+
+```
+numpy==1.19.3
+sklearn==0.24.0
+joblib==1.0.0
+tqdm==4.55.0
+xlrd==2.0.1
+xlwt==1.3.0
+sonpy==1.7.5
+```
+
 ## Help and Support
 
 ### Documentation
