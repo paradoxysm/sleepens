@@ -1,7 +1,7 @@
-numpy
-sklearn
-joblib
-tqdm
-xlrd
-xlwt
-sonpy
+numpy==1.19
+sklearn==0.24
+joblib==1.0
+tqdm==4.55
+xlrd==2.0
+xlwt==1.3
+sonpy==1.7
