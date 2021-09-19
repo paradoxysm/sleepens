@@ -43,9 +43,13 @@ sleepens.run()
 Alongside the Sleep Ensemble application, the framework is designed for high modularity and integration with other scripts in very little code.
 
 ```python
+# Setup a protocol
+from sleepens.protocols.sleepens4 import SleepEnsemble4
+model = SleepEnsemble4()
+
 # Load a pre-trained model in a .joblib file
 import joblib
-model = joblib.load("/path/to/model.joblib")
+model.classifier = joblib.load("/path/to/model.joblib")
 
 # Classify your data
 # Data is a list of 2D arrays in the form of (n samples, n features)
