@@ -183,7 +183,6 @@ def _write_labels(sonfile, dataobject, channel_idx, map, tickbase):
 	tick = 0
 	for i in range(len(labels)):
 		textmarks[i] = sp.TextMarker(labels[i], nTick=tick, nCode1=codes[i])
-		if i <3: print(textmarks[i])
 		tick += tickbase
 	sonfile.WriteTextMarks(channel_idx, textmarks)
 	return sonfile
