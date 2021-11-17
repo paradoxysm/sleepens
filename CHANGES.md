@@ -10,6 +10,10 @@
 - ![Other](https://img.shields.io/badge/-Other-lightgrey?style=flat-square) : Miscellaneous updates such as package structure or GitHub quality of life updates.
 
 ### Version 1.0.0
+- ![Fix](https://img.shields.io/badge/-Fix-red?style=flat-square) : Remove `min_impurity_split` from `GradientBoostingClassifier` as it no longer exists in the underlying `sklearn` class.
+- ![Documentation](https://img.shields.io/badge/-Documentation-blue?style=flat-square) : Improve organization of the build directory.
+
+### Version 1.0.0
 - ![Feature](https://img.shields.io/badge/-Feature-blueviolet?style=flat-square) : Sleep Ensemble is released! Hurray!
 - ![Feature](https://img.shields.io/badge/-Feature-blueviolet?style=flat-square) : IO interface selection for read and write implemented. Interfaces for .mat exports from Spike2, .smr/.smrx from Spike2, and .xls "datasets" have been included.
 - ![Feature](https://img.shields.io/badge/-Feature-blueviolet?style=flat-square) : End-user command line interface application developed. Includes ability to classify data, train/validate models, load/export builds.
