@@ -5,3 +5,4 @@ tqdm
 xlrd
 xlwt
 sonpy
+scipy
