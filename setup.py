@@ -23,7 +23,7 @@ setup(
 	include_package_data=True,
 	install_requires=[
 		'numpy',
-		'sklearn',
+		'scikit-learn',
 		'joblib',
 		'tqdm',
 		'xlrd',
