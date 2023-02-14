@@ -1,6 +1,6 @@
 ## Sleep Ensemble
 
-![CircleCI](https://img.shields.io/circleci/build/github/paradoxysm/sleepens?style=flat-square)
+[![CircleCI](https://img.shields.io/circleci/build/github/paradoxysm/sleepens?style=flat-square)](https://circleci.com/gh/paradoxysm/pypkg/tree/sleepens)
 [![Codecov](https://flat.badgen.net/codecov/c/github/paradoxysm/sleepens?label=coverage&kill_cache=1)](https://codecov.io/gh/paradoxysm/sleepens)
 [![GitHub](https://flat.badgen.net/github/license/paradoxysm/sleepens)](https://github.com/paradoxysm/sleepens/blob/master/LICENSE)
 
