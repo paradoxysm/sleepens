@@ -27,7 +27,7 @@ commands:
             pip install codecov
       - run:
           name: Run tests
-          command: pytest
+          command: python -m pytest
       - run:
           name: Codecov
           command: codecov
