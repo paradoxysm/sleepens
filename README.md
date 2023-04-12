@@ -2,8 +2,8 @@
 
 [![CircleCI](https://img.shields.io/circleci/build/github/paradoxysm/sleepens?style=flat-square)](https://circleci.com/gh/paradoxysm/sleepens/tree/master)
 [![Codecov](https://flat.badgen.net/codecov/c/github/paradoxysm/sleepens?label=coverage&kill_cache=1)](https://codecov.io/gh/paradoxysm/sleepens)
-[![DOI](https://img.shields.io/badge/DOI-10.5821%2Fzenodo.7791521-blue)](https://zenodo.org/badge/latestdoi/282098794)
-[![GitHub](https://flat.badgen.net/github/license/paradoxysm/sleepens)](https://github.com/paradoxysm/sleepens/blob/master/LICENSE)
+[![DOI](https://img.shields.io/badge/DOI-10.5821%2Fzenodo.7791521-blue?style=flat-square)](https://zenodo.org/badge/latestdoi/282098794)
+[![GitHub](https://img.shields.io/github/license/paradoxysm/sleepens?color=blue&style=flat-square)](https://github.com/paradoxysm/sleepens/blob/master/LICENSE)
 
 Sleep Ensemble is a framework for end-to-end sleep state classification using machine learning. It is designed to allow for modular data processing, classification, and further post-processing.
 
