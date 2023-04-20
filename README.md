@@ -69,7 +69,7 @@ See the [changelog](https://github.com/paradoxysm/sleepens/blob/master/CHANGES.m
 
 `sleepens` is in a relatively finished state. It has not been tested on different Python environment and OS combinations.
 
-Currently, `sleepens` supports .mat, .smr/.smrx, .xls file formats for reading and writing. Additional i/o interfaces can be contributed to `sleepens.io.interfaces` following the basic structure.
+Currently, `sleepens` supports .mat, .smr/.smrx, .xls file formats for reading and writing. Of note, presently the SONpy interface for reading/writing .smr/.smrx files works for reading .smr only and writing .smrx only. No clear documentation exists to explain errors when attempting to read from .smrx. Additional i/o interfaces can be contributed to `sleepens.io.interfaces` following the basic structure.
 
 The underlying data processing pipelines and classification models are modular and can be adjusted to create different sleep ensemble models. `sleepens` currently contains one protocol, SleepEnsemble4, for 4-state sleep classification. New or modified protocols can be contributed to `sleepens.protocols` following the basic structure.
 
