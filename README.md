@@ -80,7 +80,7 @@ Finally, `sleepens` uses `joblib` to store the pre-trained builds. This isn't th
 ```
 joblib==1.0.0
 numpy==1.19.3
-scikit-learn==0.24.0
+scikit-learn==1.2.2
 scipy==1.7.2
 sonpy==1.7.5
 tqdm==4.55.0
