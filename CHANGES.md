@@ -9,6 +9,10 @@
 - ![Documentation](https://img.shields.io/badge/-Documentation-blue?style=flat-square) : An update to the documentation.
 - ![Other](https://img.shields.io/badge/-Other-lightgrey?style=flat-square) : Miscellaneous updates such as package structure or GitHub quality of life updates.
 
+### Version 1.0.2 (Upcoming)
+- ![Fix](https://img.shields.io/badge/-Fix-red?style=flat-square) : Change `loss` in `GradientBoostingClassifier` to `log_loss` in accordance to updated `scikit-learn` class.
+- ![Fix](https://img.shields.io/badge/-Fix-red?style=flat-square) : Updated `_is_fitted` to match updated attribute naming in underlying `scikit-learn` class.
+
 ### Version 1.0.1
 - ![Fix](https://img.shields.io/badge/-Fix-red?style=flat-square) : Remove `min_impurity_split` from `GradientBoostingClassifier` as it no longer exists in the underlying `sklearn` class.
 - ![Documentation](https://img.shields.io/badge/-Documentation-blue?style=flat-square) : Improve organization of the build directory.
