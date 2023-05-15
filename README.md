@@ -6,7 +6,7 @@
 [![GitHub](https://img.shields.io/github/license/paradoxysm/sleepens?color=blue&style=flat-square)](https://github.com/paradoxysm/sleepens/blob/master/LICENSE)
 
 Sleep Ensemble is a framework for end-to-end sleep state classification using machine learning. It is designed to allow for modular data processing, classification, and further post-processing.
-Please see [here](https://academic.oup.com/sleep/advance-article-abstract/doi/10.1093/sleep/zsad101/7109541) for publication.
+Published in [SLEEP](https://academic.oup.com/sleep/advance-article-abstract/doi/10.1093/sleep/zsad101/7109541).
 
 ## Installation
 
@@ -90,7 +90,13 @@ sonpy==1.7.5
 scipy==1.7.2
 ```
 
-Should one wish to upgrade these dependencies to the latest version of `scikit-learn`, change all references of `n_features_` to `n_features_in_` in `sleepens/sleepens/ml/_base_model.py`, `sleepens/sleepens/ml/models/_gb.py`, `sleepens/sleepens/ml/models/_tsens.py`, and `sleepens/sleepens/ml/models/_stsens.py`. Furthermore, change the loss parameter in `sleepens/sleepens/ml/_gb.py` line 220 to 'log_loss' (which replaces 'deviance' but is algorithmically the same). 
+Should one wish to upgrade these dependencies to the latest version of `scikit-learn`, change all references of `n_features_` to `n_features_in_` in the following:
+- `sleepens/sleepens/ml/_base_model.py`
+- `sleepens/sleepens/ml/models/_gb.py`
+- `sleepens/sleepens/ml/models/_tsens.py`
+- `sleepens/sleepens/ml/models/_stsens.py`
+
+Furthermore, change the loss parameter in `sleepens/sleepens/ml/_gb.py` line 220 to 'log_loss' (which replaces 'deviance' but is algorithmically the same). 
 
 ## Help and Support
 
