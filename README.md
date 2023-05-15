@@ -6,11 +6,12 @@
 [![GitHub](https://img.shields.io/github/license/paradoxysm/sleepens?color=blue&style=flat-square)](https://github.com/paradoxysm/sleepens/blob/master/LICENSE)
 
 Sleep Ensemble is a framework for end-to-end sleep state classification using machine learning. It is designed to allow for modular data processing, classification, and further post-processing.
+Please see [here](https://academic.oup.com/sleep/advance-article-abstract/doi/10.1093/sleep/zsad101/7109541) for publication.
 
 ## Installation
 
 Install a suitable python environment from [python.org](https://www.python.org/downloads/release/python-378/).
-> Sleep Ensemble supports Python 3.7 or later. It is extensively tested and developed with 64-bit Python 3.7.8 on Windows.
+> Sleep Ensemble supports Python 3.7 to 3.9. It is extensively tested and developed with 64-bit Python 3.7.8 on Windows.
 
 > Sleep Ensemble pre-trained builds are only useable for the specific OS and 32/64-bit Python environment. Its use may be possible with other Python 3.x versions but not guaranteed. The included pre-trained SleepEnsemble4 is built on 64-bit Python 3.7.8 on Windows.
 
@@ -22,7 +23,6 @@ Alternatively, download the source code for the latest release [here](https://gi
 ```
 python setup.py install
 ```
-> Your installation of Python may require you to use the alias python3 to run python scripts.
 
 Download any pre-trained builds [here](https://github.com/paradoxysm/sleepens/blob/master/BUILDS.md) or train your own.
 
@@ -77,16 +77,20 @@ Finally, `sleepens` uses `joblib` to store the pre-trained builds. This isn't th
 
 ## Dependencies
 
+`sleepens` was developed using Python 3.7.8. Since development, `scikit-learn` has updated to a point that `sleepens` is not compatible with later versions of `scikit-learn` due to attribute name changes. At the same time, `sonpy` is limited to Python 3.7 to 3.9. For the sake of replicability (especially with pre-trained models provided on publication, the repository remains using the below dependencies at these versions.
+
 ```
+numpy==1.21.6
+scikit-learn==0.24.0
 joblib==1.0.0
-numpy==1.19.3
-scikit-learn==1.2.2
-scipy==1.7.2
-sonpy==1.7.5
 tqdm==4.55.0
 xlrd==2.0.1
 xlwt==1.3.0
+sonpy==1.7.5
+scipy==1.7.2
 ```
+
+Should one wish to upgrade these dependencies to the latest version of `scikit-learn`, change all references of `n_features_` to `n_features_in_` in `sleepens/sleepens/ml/_base_model.py`, `sleepens/sleepens/ml/models/_gb.py`, `sleepens/sleepens/ml/models/_tsens.py`, and `sleepens/sleepens/ml/models/_stsens.py`. Furthermore, change the loss parameter in `sleepens/sleepens/ml/_gb.py` line 220 to 'log_loss' (which replaces 'deviance' but is algorithmically the same). 
 
 ## Help and Support
 
