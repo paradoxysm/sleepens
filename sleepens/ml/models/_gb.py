@@ -15,8 +15,8 @@ class GradientBoostingClassifier(Classifier):
 
     Parameters
     ----------
-    loss : {'deviance', 'exponential'}, default='deviance'
-        The loss function to be optimized. 'deviance' refers to
+    loss : {'log_loss', 'exponential'}, default='log_loss'
+        The loss function to be optimized. 'log_loss' refers to
         deviance (= logistic regression) for classification
         with probabilistic outputs. For loss 'exponential' gradient
         boosting recovers the AdaBoost algorithm.
@@ -163,7 +163,7 @@ class GradientBoostingClassifier(Classifier):
 	n_classes_ : int
 		Number of classes.
 
-	n_features_ : int
+	n_features_in_ : int
 		Number of features.
 
 	Underlying Attributes
@@ -208,7 +208,7 @@ class GradientBoostingClassifier(Classifier):
     classes_ : ndarray of shape (n_classes,)
         The classes labels.
 
-    n_features_ : int
+    n_features_in_ : int
         The number of data features.
 
     n_classes_ : int

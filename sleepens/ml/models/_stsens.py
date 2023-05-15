@@ -37,7 +37,7 @@ class StackedTimeSeriesEnsemble(TimeSeriesClassifier):
 	n_classes_ : int
 		Number of classes.
 
-	n_features_ : int
+	n_features_in_ : int
 		Number of features.
 	"""
 	def __init__(self, layer_1=TimeSeriesEnsemble(), layer_2=TimeSeriesEnsemble(),
@@ -167,6 +167,6 @@ class StackedTimeSeriesEnsemble(TimeSeriesClassifier):
 		fitted : bool
 			True if the Classifier is fitted, False otherwise.
 		"""
-		attributes = ["n_classes_","n_features_"]
+		attributes = ["n_classes_","n_features_in_"]
 		return TimeSeriesClassifier._is_fitted(self, attributes=attributes) and \
 				self.layer_1._is_fitted() and self.layer_2._is_fitted()
