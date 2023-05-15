@@ -14,7 +14,7 @@ from sleepens.io.interfaces import interfaces
 from sleepens.protocols import protocols
 from sleepens.protocols.sleepens4 import SleepEnsemble4
 
-version = "1.0.2"
+version = "1.0.3"
 model = SleepEnsemble4()
 verbose = 4
 
