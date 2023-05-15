@@ -11,9 +11,9 @@ Published in [SLEEP](https://academic.oup.com/sleep/advance-article-abstract/doi
 ## Installation
 
 Install a suitable python environment from [python.org](https://www.python.org/downloads/release/python-378/).
-> Sleep Ensemble supports Python 3.7 to 3.9. It is extensively tested and developed with 64-bit Python 3.7.8 on Windows.
+> Sleep Ensemble supports Python 3.7 only. It is extensively tested and developed with 64-bit Python 3.7.8 on Windows.
 
-> Sleep Ensemble pre-trained builds are only useable for the specific OS and 32/64-bit Python environment. Its use may be possible with other Python 3.x versions but not guaranteed. The included pre-trained SleepEnsemble4 is built on 64-bit Python 3.7.8 on Windows.
+> Sleep Ensemble pre-trained builds are only useable for the specific OS and 32/64-bit Python environment. The included pre-trained SleepEnsemble4 is built on 64-bit Python 3.7.8 on Windows.
 
 Install the latest `sleepens` release using `pip` (on a terminal like command prompt):
 ```
@@ -77,7 +77,7 @@ Finally, `sleepens` uses `joblib` to store the pre-trained builds. This isn't th
 
 ## Dependencies
 
-`sleepens` was developed using Python 3.7.8. Since development, `scikit-learn` has updated to a point that `sleepens` is not compatible with later versions of `scikit-learn` due to attribute name changes. At the same time, `sonpy` is limited to Python 3.7 to 3.9. For the sake of replicability (especially with pre-trained models provided on publication, the repository remains using the below dependencies at these versions.
+`sleepens` was developed using Python 3.7.8. Since development, `scikit-learn` has updated to a point that `sleepens` is not compatible with later versions of `scikit-learn` due to attribute name changes. At the same time, `sonpy` is limited to Python 3.7 to 3.9. For the sake of replicability (especially with pre-trained models provided on publication, the repository remains using the below dependencies at these versions. This also limits Python to 3.7.
 
 ```
 numpy==1.21.6
