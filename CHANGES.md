@@ -9,7 +9,7 @@
 - ![Documentation](https://img.shields.io/badge/-Documentation-blue?style=flat-square) : An update to the documentation.
 - ![Other](https://img.shields.io/badge/-Other-lightgrey?style=flat-square) : Miscellaneous updates such as package structure or GitHub quality of life updates.
 
-### Version 1.0.2
+### Version 1.0.3
 - ![Documentation](https://img.shields.io/badge/-Documentation-blue?style=flat-square) : Updated README to reflect freezing of dependencies.
 - ![Other](https://img.shields.io/badge/-Other-lightgrey?style=flat-square) : Specified exact versions of dependencies in `requirements.txt` and in `setup.py`.
 
