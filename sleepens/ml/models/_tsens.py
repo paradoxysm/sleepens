@@ -53,7 +53,7 @@ class TimeSeriesEnsemble(TimeSeriesClassifier):
 	n_classes_ : int
 		Number of classes.
 
-	n_features_in_ : int
+	n_features_ : int
 		Number of features.
 	"""
 	def __init__(self, estimators=default_estimators,
@@ -196,5 +196,5 @@ class TimeSeriesEnsemble(TimeSeriesClassifier):
 		fitted : bool
 			True if the Classifier is fitted, False otherwise.
 		"""
-		attributes = ["estimators_","n_classes_","n_features_in_"]
+		attributes = ["estimators_","n_classes_","n_features_"]
 		return TimeSeriesClassifier._is_fitted(self, attributes=attributes)

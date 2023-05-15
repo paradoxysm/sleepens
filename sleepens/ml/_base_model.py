@@ -65,7 +65,7 @@ class Classifier(ABC):
 	n_classes_ : int
 		Number of classes.
 
-	n_features_in_ : int
+	n_features_ : int
 		Number of features.
 	"""
 	def __init__(self, warm_start=False,
@@ -323,20 +323,20 @@ class Classifier(ABC):
 		if not self._is_fitted():
 			raise RuntimeError("Model has not been fitted")
 		X, _ = check_XY(X=X)
-		if X.shape[1] != self.n_features_in_:
-			raise ValueError("Model expects %d features" % self.n_features_in_,
+		if X.shape[1] != self.n_features_:
+			raise ValueError("Model expects %d features" % self.n_features_,
 								"but input has %d features" % X.shape[1])
 		if self.verbose > 1 : print("Predicting %d samples." % X.shape[0])
 		return X
 
-	def _is_fitted(self, attributes=["n_classes_","n_features_in_"]):
+	def _is_fitted(self, attributes=["n_classes_","n_features_"]):
 		"""
 		Returns if the Classifier has been trained and is
 		ready to predict new data.
 
 		Parameters
 		----------
-		attributes : list of string, default=["n_classes_","n_features_in_"]
+		attributes : list of string, default=["n_classes_","n_features_"]
 			List of instance attributes to check existence of as proof
 			that the Classifier has been fitted. Therefore, these attributes
 			should only be created during the fit process.
@@ -357,7 +357,7 @@ class Classifier(ABC):
 		model is designed to work with.
 
 		If the Classifier has `warm_start` as True and
-		already has `n_classes_` or `n_features_in_` set,
+		already has `n_classes_` or `n_features_` set,
 		the provided arguments must match.
 
 		Parameters
@@ -372,9 +372,9 @@ class Classifier(ABC):
 		elif self.warm_start and self.n_classes_ < n_classes:
 			raise ValueError("Class mismatch: Model was trained on", self.n_classes_,
 							"classes but input has", n_classes, "classes")
-		if not hasattr(self, 'n_features_in_') or not self.warm_start : self.n_features_in_ = n_features
-		elif self.warm_start and self.n_features_in_ != n_features:
-			raise ValueError("Feature mismatch: Model has", self.n_features_in_,
+		if not hasattr(self, 'n_features_') or not self.warm_start : self.n_features_ = n_features
+		elif self.warm_start and self.n_features_ != n_features:
+			raise ValueError("Feature mismatch: Model has", self.n_features_,
 							"features but input has", n_features, "features")
 
 class TimeSeriesClassifier(Classifier):
@@ -402,7 +402,7 @@ class TimeSeriesClassifier(Classifier):
 	n_classes_ : int
 		Number of classes.
 
-	n_features_in_ : int
+	n_features_ : int
 		Number of features.
 	"""
 	def __init__(self, warm_start=False,
@@ -623,8 +623,8 @@ class TimeSeriesClassifier(Classifier):
 		for x in X : check_XY(X=x)
 		try : X_ = np.concatenate(X)
 		except : raise ValueError("Inputs have different number of features")
-		if X_.shape[1] != self.n_features_in_:
-			raise ValueError("Model expects %d features" % self.n_features_in_,
+		if X_.shape[1] != self.n_features_:
+			raise ValueError("Model expects %d features" % self.n_features_,
 								"but input has %d features" % X_.shape[1])
 		if self.verbose > 1 : print("Predicting %d samples." % X_.shape[0])
 		return X

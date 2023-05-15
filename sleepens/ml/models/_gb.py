@@ -15,8 +15,8 @@ class GradientBoostingClassifier(Classifier):
 
     Parameters
     ----------
-    loss : {'log_loss', 'exponential'}, default='log_loss'
-        The loss function to be optimized. 'log_loss' refers to
+    loss : {'deviance', 'exponential'}, default='deviance'
+        The loss function to be optimized. 'deviance' refers to
         deviance (= logistic regression) for classification
         with probabilistic outputs. For loss 'exponential' gradient
         boosting recovers the AdaBoost algorithm.
@@ -163,7 +163,7 @@ class GradientBoostingClassifier(Classifier):
 	n_classes_ : int
 		Number of classes.
 
-	n_features_in_ : int
+	n_features_ : int
 		Number of features.
 
 	Underlying Attributes
@@ -208,7 +208,7 @@ class GradientBoostingClassifier(Classifier):
     classes_ : ndarray of shape (n_classes,)
         The classes labels.
 
-    n_features_in_ : int
+    n_features_ : int
         The number of data features.
 
     n_classes_ : int
@@ -217,7 +217,7 @@ class GradientBoostingClassifier(Classifier):
     max_features_ : int
         The inferred value of max_features.
 	"""
-	def __init__(self, loss='log_loss', learning_rate=0.1, n_estimators=100,
+	def __init__(self, loss='deviance', learning_rate=0.1, n_estimators=100,
 				subsample=1.0, criterion='friedman_mse', min_samples_split=2,
 				min_samples_leaf=1, min_weight_fraction_leaf=0.0, max_depth=3,
 				min_impurity_decrease=0.0, init=None,
@@ -281,5 +281,5 @@ class GradientBoostingClassifier(Classifier):
 		fitted : bool
 			True if the Classifier is fitted, False otherwise.
 		"""
-		attributes = ["estimators_","n_classes_","n_features_in_"]
+		attributes = ["estimators_","n_classes_","n_features_"]
 		return Classifier._is_fitted(self.gb, attributes=attributes)
