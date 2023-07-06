@@ -29,7 +29,7 @@ setup(
 		'xlrd==2.0.1',
 		'xlwt==1.3.0',
 		'sonpy==1.7.5',
-		'scipy==1.7.2',
+		'scipy==1.10.0',
 	],
 	python_requires='>=3.9, <3.10',
 	classifiers=[
