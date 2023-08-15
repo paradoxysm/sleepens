@@ -15,11 +15,7 @@ Install a suitable python environment from [python.org](https://www.python.org/d
 
 > Sleep Ensemble pre-trained builds are only useable for the specific OS and 32/64-bit Python environment. The included pre-trained SleepEnsemble4 is built on 64-bit Python 3.7.8 on Windows.
 
-Install the latest `sleepens` release using `pip` (on a terminal like command prompt):
-```
-pip install sleepens
-```
-Alternatively, download the source code for the latest release [here](https://github.com/paradoxysm/sleepens/releases). Unzip into desired location. Using the terminal, navigate to the top `sleepens` folder where `setup.py` is located and run the following:
+Download the source code for the latest release [here](https://github.com/paradoxysm/sleepens/releases). Unzip into desired location. Using the terminal, navigate to the top `sleepens` folder where `setup.py` is located and run the following:
 ```
 python setup.py install
 ```
@@ -35,7 +31,12 @@ The application runs via `sleepens.py` which can be copied/moved anywhere as nee
 python sleepens.py
 ```
 
-As a framework, the Sleep Ensemble package can be used as you would any other package. The end-user program can be accessed:
+As a framework, the Sleep Ensemble package can be used as you would any other package. Install the latest `sleepens` release using `pip` (on a terminal like command prompt):
+```
+pip install sleepens
+```
+
+The end-user program can be accessed:
 ```python
 import sleepens
 sleepens.run()
