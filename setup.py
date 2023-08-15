@@ -10,12 +10,12 @@ def read(*paths):
 
 setup(
 	name='sleepens',
-	version='1.0.3',
+	version='1.0.4',
 	description='Sleep Classification using Ensemble Classification',
 	long_description=(read('README.md') + '\n\n'),
 	long_description_content_type="text/markdown",
 	url='http://github.com/paradoxysm/sleepens',
-	download_url = 'https://github.com/paradoxysm/sleepens/archive/1.0.3.tar.gz',
+	download_url = 'https://github.com/paradoxysm/sleepens/archive/1.0.4.tar.gz',
 	author='paradoxysm',
 	author_email='paradoxysm.dev@gmail.com',
 	license='BSD-3-Clause',
@@ -31,7 +31,7 @@ setup(
 		'sonpy==1.7.5',
 		'scipy==1.7.2',
 	],
-	python_requires='>=3.9, <3.10',
+	python_requires='>=3.7, <3.8',
 	classifiers=[
 		'Development Status :: 4 - Beta',
 		'Intended Audience :: Developers',
