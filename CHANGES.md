@@ -9,6 +9,13 @@
 - ![Documentation](https://img.shields.io/badge/-Documentation-blue?style=flat-square) : An update to the documentation.
 - ![Other](https://img.shields.io/badge/-Other-lightgrey?style=flat-square) : Miscellaneous updates such as package structure or GitHub quality of life updates.
 
+### Version 1.0.4
+- ![Fix](https://img.shields.io/badge/-Fix-red?style=flat-square) : Froze all dependency versions; included `threadpoolctl` version requirement.
+- ![Other](https://img.shields.io/badge/-Other-lightgrey?style=flat-square) : Fixed dependency naming and requirements in `setup.py` and `requirements.txt`.
+- ![Other](https://img.shields.io/badge/-Other-lightgrey?style=flat-square) : Updated model naming schema when loading a model to use the file name as the model name.
+- ![Documentation](https://img.shields.io/badge/-Documentation-blue?style=flat-square) : Updated relevant documentation to incorporate changes.
+
+
 ### Version 1.0.3
 - ![Documentation](https://img.shields.io/badge/-Documentation-blue?style=flat-square) : Updated README to reflect freezing of dependencies.
 - ![Other](https://img.shields.io/badge/-Other-lightgrey?style=flat-square) : Specified exact versions of dependencies in `requirements.txt` and in `setup.py`.
