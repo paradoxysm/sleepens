@@ -25,7 +25,7 @@ setup(
 		'numpy==1.21.6',
 		'scikit-learn==0.24.0',
 		'joblib==1.0.0',
-		'tqd==4.55.0',
+		'tqdm==4.55.0',
 		'xlrd==2.0.1',
 		'xlwt==1.3.0',
 		'sonpy==1.7.5',
