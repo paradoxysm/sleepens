@@ -22,6 +22,7 @@ setup(
 	packages=find_packages(exclude=['tests']),
 	include_package_data=True,
 	install_requires=[
+		'threadpoolctl==2.1.0',
 		'numpy==1.21.6',
 		'scikit-learn==0.24.0',
 		'joblib==1.0.0',
