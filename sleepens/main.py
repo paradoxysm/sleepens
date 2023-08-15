@@ -14,7 +14,7 @@ from sleepens.io.interfaces import interfaces
 from sleepens.protocols import protocols
 from sleepens.protocols.sleepens4 import SleepEnsemble4
 
-version = "1.0.3"
+version = "1.0.4"
 model = SleepEnsemble4()
 verbose = 4
 
@@ -369,6 +369,7 @@ def load():
 		print("Cancelling import. Returning you to the main menu")
 		return
 	model.classifier = joblib.load(file)
+	model.name = Path(file).stem
 	print("Loaded", model.name)
 
 def export():
