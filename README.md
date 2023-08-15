@@ -80,6 +80,7 @@ Finally, `sleepens` uses `joblib` to store the pre-trained builds. This isn't th
 `sleepens` was developed using Python 3.7.8. Since development, `scikit-learn` has updated to a point that `sleepens` is not compatible with later versions of `scikit-learn` due to attribute name changes. At the same time, `sonpy` is limited to Python 3.7 to 3.9. For the sake of replicability (especially with pre-trained models provided on publication, the repository remains using the below dependencies at these versions. This also limits Python to 3.7.
 
 ```
+threadpoolctl==2.1.0
 numpy==1.21.6
 scikit-learn==0.24.0
 joblib==1.0.0
